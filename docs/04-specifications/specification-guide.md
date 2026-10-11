@@ -1,6 +1,7 @@
 # Specification guide
 
-> Outline. Detailed authoring guidance follows version 0.5.
+> [!WARNING]
+> Draft outline, not ready for use. Detailed authoring guidance follows version 0.5.
 
 ## Feature boundaries
 

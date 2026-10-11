@@ -1,6 +1,7 @@
 # Implementation guide
 
-> Outline. Target: version 0.5.
+> [!WARNING]
+> Draft outline, not ready for use. Target: version 0.5.
 
 ## Feature design
 
@@ -66,7 +67,7 @@ Subfeatures consume common domain types, rules, state, or capabilities from thei
 
 ### Modification seams
 
-A feature exposes a supported variation point: a headless interface, supplied strategy, or service binding. Its specification defines the permitted variation; another feature's needs do not silently redefine its behavior.
+A feature exposes a supported variation point: a headless interface, supplied strategy, or service binding. A feature may expose several seams. A seam serves technical integration with another feature and leaves the feature's own logic unchanged; the varied behavior belongs to the integrating feature's requirements.
 
 A filtering strategy is one focused example:
 

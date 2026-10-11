@@ -1,6 +1,7 @@
 # Recipes
 
-> Outline. The two analytics recipes target version 0.5.
+> [!WARNING]
+> Draft outline, not ready for use. The two analytics recipes target version 0.5.
 
 ## Local analytics in an automotive application
 

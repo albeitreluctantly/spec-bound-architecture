@@ -1,6 +1,7 @@
 # Workflows
 
-> Outline. Detailed guidance follows version 0.5.
+> [!WARNING]
+> Draft outline, not ready for use. Detailed guidance follows version 0.5.
 
 ## Spec-driven development
 

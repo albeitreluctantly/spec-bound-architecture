@@ -1,6 +1,7 @@
 # Architecture guide
 
-> Outline. Target: version 0.5.
+> [!WARNING]
+> Draft outline, not ready for use. Target: version 0.5.
 
 ## Feature boundaries and shared scope
 
