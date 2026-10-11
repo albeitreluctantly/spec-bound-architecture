@@ -2,6 +2,9 @@
 
 A frontend architecture built around capabilities, explicit ownership, and public contracts. Features keep related behavior together; shared code supplies common concepts and infrastructure; parents and the application connect the parts.
 
+> [!NOTE]
+> Work in progress. The manifesto, overview, and setup guide are complete. The agent kit is a draft under review; the remaining documents are outlines.
+
 ## 1. Overview
 
 | Read in order                                              | Subject                                                                                |
@@ -11,8 +14,8 @@ A frontend architecture built around capabilities, explicit ownership, and publi
 
 ## 2. Setup
 
-- [Setup guide](./docs/02-setup/setup-guide.md) — outline for version 0.5: layout, conventions, ESLint, and optional agent instructions.
-- [Architecture definition for agents](./docs/02-setup/architecture-definition.md) — standalone setup artifact; outline, not ready to install.
+- [Setup guide](./docs/02-setup/setup-guide.md) — layout, conventions, ESLint, and agent kit installation.
+- [Agent kit](./docs/02-setup/agent-kit/) — files copied into a codebase for its agents: the [architecture rules](./docs/02-setup/agent-kit/architecture-rules.md), a [conventions template](./docs/02-setup/agent-kit/conventions-template.md), the [ESLint configuration](./docs/02-setup/agent-kit/eslint.config.js), and the [`spec-bound-architecture` skill](./docs/02-setup/agent-kit/skills/spec-bound-architecture/SKILL.md). Draft under review.
 
 ## 3. Engineering
 
