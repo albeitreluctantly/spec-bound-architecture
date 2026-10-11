@@ -4,12 +4,12 @@ A project adopts Spec-bound Architecture by creating its code homes, recording i
 
 ## The agent kit
 
-| File                                                                                     | Copied to                                   | Purpose                                                                         |
-| ---------------------------------------------------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------- |
-| [`architecture-rules.md`](./agent-kit/architecture-rules.md)                             | The repository, referenced from `AGENTS.md` | The rules every agent keeps loaded                                              |
+| File                                                                                     | Copied to                                   | Purpose                                                                          |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------- |
+| [`architecture-rules.md`](./agent-kit/architecture-rules.md)                             | The repository, referenced from `AGENTS.md` | The rules every agent keeps loaded                                               |
 | [`conventions-template.md`](./agent-kit/conventions-template.md)                         | A new project conventions file              | Project bindings the rules refer to: specification home, stack, coding practices |
-| [`eslint.config.js`](./agent-kit/eslint.config.js)                                       | The ESLint configuration                    | Enforcement of the import rules                                                 |
-| [`skills/spec-bound-architecture/`](./agent-kit/skills/spec-bound-architecture/SKILL.md) | The skills directory the team's tools read  | Procedures and sample implementations, loaded when a task needs them            |
+| [`eslint.config.js`](./agent-kit/eslint.config.js)                                       | The ESLint configuration                    | Enforcement of the import rules                                                  |
+| [`skills/spec-bound-architecture/`](./agent-kit/skills/spec-bound-architecture/SKILL.md) | The skills directory the team's tools read  | Procedures and sample implementations, loaded when a task needs them             |
 
 ## 1. Create the code homes
 
@@ -42,13 +42,13 @@ Configure aliases for the homes in `tsconfig.json` and in the bundler:
 
 The architecture rules state what holds in every codebase. The project conventions supply what differs between codebases, and agents read them instead of assuming defaults:
 
-| Convention                            | Example                                                                                          |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| Specification home and folder mapping | `specs/catalog/create-product.md` → `src/features/catalog/create-product/`, or no specifications |
-| Stack                                 | UI, navigation, state, data access, dependency injection, testing                                |
+| Convention                            | Example                                                                                                                       |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Specification home and folder mapping | `specs/catalog/create-product.md` → `src/features/catalog/create-product/`, or no specifications                              |
+| Stack                                 | UI, navigation, state, data access, dependency injection, testing                                                             |
 | Coding practices                      | An `onIntent` callback for intents; `Page` as a page entry's export; aliases for other code homes; how errors are represented |
-| Verification commands                 | Lint, typecheck, and test commands                                                               |
-| Architecture overrides                | Ask before adding a seam to another feature                                                      |
+| Verification commands                 | Lint, typecheck, and test commands                                                                                            |
+| Architecture overrides                | Ask before adding a seam to another feature                                                                                   |
 
 Record them in either of two ways:
 
@@ -57,7 +57,7 @@ Record them in either of two ways:
 
 ## 3. Choose a specification home
 
-Specifications can live in the repository or in an external knowledge base. Either way, record in the conventions how a specification's place maps to a feature folder, for example `specs/catalog/create-product.md` → `src/features/catalog/create-product/`. A local mirror of external specifications is not mandatory.
+Specifications can live in the repository or in an external knowledge base. Either way, record in the conventions how a specification's place maps to a feature folder, for example `specs/catalog/create-product.md` → `src/features/catalog/create-product/`.
 
 A project can also work without maintained specifications. The relationship then reverses: the code serves as the specification. [Workflows](../05-workflows/workflows.md#spec-driven-development) describes both options.
 
