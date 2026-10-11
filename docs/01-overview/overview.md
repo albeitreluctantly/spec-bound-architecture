@@ -257,7 +257,6 @@ Navigation hooks and route paths belong to application code, so features remain 
 `src/app/catalog/index.tsx`
 
 ```tsx
-import { useRouter } from 'expo-router';
 import { BrowseProducts } from '@features/catalog';
 
 export default function CatalogRoute() {
@@ -275,7 +274,6 @@ export default function CatalogRoute() {
 `src/app/catalog/create.tsx`
 
 ```tsx
-import { useRouter } from 'expo-router';
 import { CreateProduct } from '@features/catalog';
 
 export default function CreateProductRoute() {
@@ -295,8 +293,6 @@ The root layout supplies the navigator and screen options:
 `src/app/_layout.tsx`
 
 ```tsx
-import { Stack } from 'expo-router';
-
 export default function RootLayout() {
   return (
     <Stack>
@@ -314,4 +310,4 @@ Feature tests can verify validation, saving, and which intent is emitted for eac
 
 ## Continue with the guides
 
-The [Architecture guide](../03-engineering/architecture-guide.md) defines the structural rules and import boundaries. The [Implementation guide](../03-engineering/implementation-guide.md#public-surface-and-spi) explores feature interfaces and [integration patterns](../03-engineering/implementation-guide.md#integration-patterns), including [embedding](../03-engineering/implementation-guide.md#extension). The [Specification guide](../04-specifications/specification-guide.md#referencing-other-features) explains how to describe bounded capabilities and their relations in requirements.
+The [Setup guide](../02-setup/setup-guide.md) prepares a codebase for the architecture: code homes, project conventions, import enforcement, and the agent kit. The engineering guides go deeper: the [Architecture guide](../03-engineering/architecture-guide.md) defines the structural rules and import boundaries, the [Implementation guide](../03-engineering/implementation-guide.md) explores feature interfaces and [integration patterns](../03-engineering/implementation-guide.md#integration-patterns), and [Recipes](../03-engineering/recipes.md) work through end-to-end scenarios. The [Specification guide](../04-specifications/specification-guide.md) explains how to describe bounded capabilities and their relations in requirements.
