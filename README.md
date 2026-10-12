@@ -37,4 +37,11 @@ A frontend architecture built around capabilities, explicit ownership, and publi
 > [!NOTE]
 > **About the name**
 >
-> “Spec-bound Architecture” is chosen to avoid the widely used “spec-driven” term and potential colision with similarly named projects. This framework was developed independently and is not affiliated with or endorsed by other projects or products using “Spec-bound,” “SpecBound,” "Spec-driven" or "SpecDriven" or similar names.
+> “Spec-bound Architecture” is chosen to avoid the widely used “spec-driven” term and potential colision with similarly named projects. This framework was developed independently, inspired by other publicly available and usually commonly known modular/feature-based architecture guidelines, and is not affiliated with or endorsed by other projects or products using “Spec-bound,” “SpecBound,” "Spec-driven" or "SpecDriven" or similar names.
+
+> [!CAUTION]
+> **Disclaimer**
+>
+> This documentation and the agent kit were written with the assistance of AI and have not been verified line by line. The workflows have not been tested end to end, so they may contain errors or contradictions, and agents following them may perform worse than expected. The material is provided as is, in good faith, without warranty of any kind; the author accepts no responsibility for outcomes of its use.
+>
+> All examples are AI-generated, some may derive from high-level, anonymized and limited descriptions of certain bounded scenarios from author's experience. The author steered them toward generic, fictional settings in good faith; they reproduce no real project, and any resemblance to one is coincidental.
