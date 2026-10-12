@@ -16,7 +16,7 @@ The architecture rules in the project instructions state what must hold. This sk
 
 1. Read the project conventions: specification home, stack, coding practices, and architecture overrides.
 2. Identify the feature the request concerns, its specification, and its code home, and follow the project's workflow; see [specifications](references/specifications.md#workflow-and-home).
-3. Open the reference for the task. Open an example when its pattern applies.
+3. Open the reference for the task. For a pattern, follow its existing implementation in the codebase when one conforms to the architecture rules; open the kit's example when none does or the existing one leaves out what the task needs.
 
 ## Task routing
 
