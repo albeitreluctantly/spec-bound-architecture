@@ -34,6 +34,20 @@ A frontend architecture built around capabilities, explicit ownership, and publi
 - [Workflows](./docs/05-workflows/workflows.md) — main spec-driven approach and specification homes, human-only execution, no-maintained-spec option, gradual adoption, and agent coordination. Outline; follows 0.5.
 - [Agent roster](./docs/05-workflows/agent-roster.md) — responsibilities and handoffs. Outline; follows 0.5.
 
+## Prior art
+
+Spec-bound Architecture builds on ideas from these approaches and tools, among many others in the wider body of work on modular and feature-based design.
+
+- [Vertical Slice Architecture](https://www.jimmybogard.com/vertical-slice-architecture/) — Jimmy Bogard
+- [Vertical slice architecture in Node.js and TypeScript: one folder per use case](https://thetshaped.dev/p/vertical-slice-architecture-in-nodejs-typescript-one-folder-per-use-case)
+- [Screaming architecture and colocation in Node.js, TypeScript, and React](https://thetshaped.dev/p/screaming-architecture-and-colocation-nodejs-typescript-react)
+- [The Vertical Codebase](https://tkdodo.eu/blog/the-vertical-codebase) — TkDodo
+- [Feature Garden](https://github.com/Vladyslav-Murashchenko/feature-garden) — Vladyslav Murashchenko
+- [Bulletproof React](https://github.com/alan2207/bulletproof-react/)
+- [Feature-Sliced Design](https://feature-sliced.design/)
+- [feature-u](https://feature-u.js.org/2.0.0/)
+- [improve-codebase-architecture skill](https://github.com/mattpocock/skills/blob/main/skills/engineering/improve-codebase-architecture/SKILL.md) — Matt Pocock
+
 > [!NOTE]
 > **About the name**
 >
