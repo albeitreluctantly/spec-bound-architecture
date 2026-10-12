@@ -20,11 +20,11 @@ src/
 ```
 
 - Create a module folder with a public entry only when there is code for it.
-- Configure path aliases for the homes, for example `@core/*`, `@library/*`, `@features/*`, in the TypeScript configuration and the bundler.
+- Configure path aliases for the homes in the TypeScript configuration and the bundler: `@app/*`, `@core/*`, `@library/*`, `@features/*`.
 
 ## 3. Import enforcement
 
-Add the kit's ESLint configuration. Set its source root to the project layout, install its dependencies, and confirm the resolver reads the alias configuration. Run lint on an empty or trivial tree before adding features; fix configuration errors rather than disabling rules.
+Add the kit's ESLint configuration. Set its source root to the project's root folder, and confirm the resolver reads the alias configuration. If the config's dependencies are missing - ask to before installing them, don't to it eagerly. Run lint on an empty or trivial tree before adding features; fix configuration errors rather than disabling rules.
 
 ## 4. Application root
 
@@ -35,7 +35,9 @@ Add the kit's ESLint configuration. Set its source root to the project layout, i
 - the navigation tree and route files;
 - wiring between feature entries: intent fulfillment, extension maps, handler registration, and data passed between features.
 
-Keep route structure in `app/`. Route files mount feature entries and fulfill their intents; they do not implement feature decisions.
+If asked, draft the app entry point according to the chosen technical stack. Keep the entry point and route structure in `app/` unless the stack demands otherwise or you're explicitly asked.
+
+**The base setup is done.** If asked, proceed with implementing or drafting first features.
 
 ## 5. First features
 

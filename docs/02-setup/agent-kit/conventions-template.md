@@ -10,11 +10,12 @@
 | ------------- | -------------------------------------------- |
 | <Domain term> | <Definition used in specifications and code> |
 
-## Specification home
+## Specifications
 
-- **Location:** <repository path, for example `specs/`, the external knowledge base and how to reach it, or `none` when the project works without specifications; omit the remaining items in that case>
-- **Correspondence:** <how a specification's place maps to a feature folder, with one example: `specs/catalog/create-product.md` → `src/features/catalog/create-product/`>
-- **Formats:** <user stories, contract tables, or other formats in use>
+- **Workflow:** <`intent-first` (default): agents update the owning specification from the request before the code; `spec-first`: agents implement only what the specifications describe; or `code-as-spec`: the project keeps no specifications and the code serves as the specification>
+- **Location:** <omit in code-as-spec; a repository path, for example `specs/`, or an external source, how to reach it, and whether agents may edit it>
+- **Correspondence:** <omit in code-as-spec; how a specification's place maps to a feature folder, with one example: `specs/catalog/create-product.md` → `src/features/catalog/create-product/`>
+- **Formats:** <omit in code-as-spec; user stories, contract tables, or other formats in use>
 
 ## Stack
 

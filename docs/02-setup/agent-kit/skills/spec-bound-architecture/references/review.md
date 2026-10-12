@@ -4,7 +4,7 @@ Review a change against the architecture rules, the project conventions, and the
 
 ## Checklist
 
-1. **Correspondence.** Each changed feature folder maps to a specification. New behavior appears in the owning specification. No feature implements another specification's behavior. Without specifications, changes stay within the request's intent, and other features' observable behavior changes only with clear justification.
+1. **Correspondence.** Each changed feature folder maps to a specification. New behavior appears in the owning specification, or in a reported update for an external one. No feature implements another specification's behavior. In code-as-spec, changes stay within the request's intent.
 2. **Placement.** New code sits in the narrowest justified home. `shared/` and `core/` code has more than one actual consumer. Domain code is not in `library/`.
 3. **Imports.** Lint passes with no disabled or weakened rules. Consumers use public entries only.
 4. **Public surface.** Entries export only what consumers need. Internal hooks, stores, and contexts stay private. Exposed slices are deliberate.

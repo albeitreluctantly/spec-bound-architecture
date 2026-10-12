@@ -2,17 +2,17 @@
 
 ## Find the owner
 
-Identify the specification that owns the behavior. The owning feature's folder is where the change belongs. A request touching several owners splits into one change per owner; each follows its own specification. Without specifications, the request's intent identifies the owner and the scope of the change.
+Identify the feature that owns the behavior from the request's intent, and its specification. The owning feature's folder is where the change belongs. A request touching several owners splits into one change per owner, each following the project's [workflow](specifications.md#workflow-and-home).
 
 ## Kinds of change
 
 | Change | Rule |
 | --- | --- |
-| Behavior change | The owning specification must describe the new behavior. Ask when it is missing, unclear, or disagrees with the request; do not change behavior on the strength of the request alone. Without specifications, the request's intent defines the new behavior. |
-| Fix | Restore the behavior the specification describes. If the specification is silent or wrong, ask. Without specifications, the request's intent defines the correct behavior. |
+| Behavior change | Intent-first: update the owning specification, or report the external update, then the code. Spec-first: the specification must already describe it; ask otherwise. Code-as-spec: the request defines the new behavior. |
+| Fix | Restore the specified behavior. When the specification is silent or wrong, intent-first corrects it from the request and spec-first asks. In code-as-spec, the request defines the correct behavior. |
 | Refactor | Keep the public entry and observable behavior unchanged. Moving code between homes follows [placement](placement.md). |
 | Supporting change in another feature | Permitted while that feature's logic and observable behavior stay unchanged: emitting measurement events, exposing a seam, extracting shared code. Ask before anything else. |
-| Removal | Delete the feature folder, its parent's re-exports, and its wiring in `app/`. Remove shared code only it used. Confirm the specification, when one exists, is removed or marked as such. |
+| Removal | Delete the feature folder, its parent's re-exports, and its wiring in `app/`. Remove shared code only it used. Remove or retire the specification according to the workflow. |
 
 ## Public surface changes
 

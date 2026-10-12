@@ -1,17 +1,23 @@
 # Specifications
 
-## Where they are
+## Workflow and home
 
-The project conventions name the specification home: repository files or an external knowledge base. A specification's place in that home maps to a feature folder.
+The project conventions name the workflow and, except in code-as-spec, the specification home: the repository or an external source. A specification's place in its home maps to a feature folder.
 
-## Without specifications
+| Workflow | Repository specifications | External specifications |
+| --- | --- | --- |
+| Intent-first (default) | Create or update the owning specification from the request, then change the code | Update the specification first when the conventions permit it and a tool can reach it; otherwise implement and report the specification update, with drafted wording |
+| Spec-first | Implement what the specification describes; ask when it is missing, ambiguous, or contradicts the request | Same as for repository specifications |
+| Code-as-spec | No specifications: implement directly from the request | |
 
-When the conventions state that the project works without specifications, the code is the record of intended behavior.
+Under intent-first and code-as-spec, the request's intent identifies the owning feature, or a new one, and what changes. Ask when it leaves the owner or the expected behavior unclear.
+
+## Code-as-spec
+
+The code is the record of intended behavior.
 
 - The request's intent defines the change and its boundaries: which feature it belongs to, what behavior changes, and what a new feature owns.
-- Do not change another feature's observable behavior without clear justification. Supporting changes that leave its behavior unchanged remain permitted.
 - Feature boundaries follow capabilities as the code and requests describe them; all other architecture rules apply unchanged.
-- Ask when the intent leaves the owner or the expected behavior unclear.
 
 ## Reading a specification
 

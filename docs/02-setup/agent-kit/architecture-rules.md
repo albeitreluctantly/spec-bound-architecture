@@ -75,10 +75,16 @@ A task often touches code owned by other features. Such a change is permitted wh
 
 ## Specifications
 
-- Specifications describe desired behavior. Read the owning specification before changing behavior, and keep the code consistent with it.
-- Do not invent intent, behavior, or boundaries; a guess becomes behavior nobody specified. Ask when a specification is missing, ambiguous, or contradicts the requested change.
+Specifications describe desired behavior and live in the repository or in an external source. The project's workflow decides how a request reaches the code:
+
+- **Intent-first** (default): identify the owning feature from the request's intent and bring its specification in line before changing the code. Edit a repository specification directly. Edit an external one when the conventions permit it and a tool can reach it; otherwise implement the change and report the specification update it needs, with drafted wording.
+- **Spec-first:** implement what the specification describes. Ask when it is missing, ambiguous, or contradicts the request.
+- **Code-as-spec:** the project keeps no specifications, and the code serves as the specification. The request's intent defines the change and its boundaries; implement it directly.
+
+In every workflow:
+
+- Do not invent intent, behavior, or boundaries; a guess becomes behavior nobody asked for. Ask when the request leaves the owner or the expected behavior unclear.
 - When a specification does not describe one bounded capability, propose splitting or merging specifications. Ownership changes need the team's agreement.
-- When the conventions state that the project works without specifications, the request's intent defines the change and its boundaries. Do not change another feature's observable behavior without clear justification.
 
 ## Skill
 
@@ -86,4 +92,4 @@ The `spec-bound-architecture` skill holds the procedures and sample implementati
 
 ## Project conventions
 
-Read the project conventions before changing code. They name the specification home, or state that the project works without specifications, and record the stack, coding practices, and architecture overrides. An override replaces the default it names in these rules.
+Read the project conventions before changing code. They name the workflow and, unless it is code-as-spec, the specification home, and record the stack, coding practices, and architecture overrides. An override replaces the default it names in these rules.

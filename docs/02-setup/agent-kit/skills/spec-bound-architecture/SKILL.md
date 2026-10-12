@@ -15,7 +15,7 @@ The architecture rules in the project instructions state what must hold. This sk
 ## Start of every task
 
 1. Read the project conventions: specification home, stack, coding practices, and architecture overrides.
-2. Find the specification that owns the behavior in question and the code home it maps to. Without specifications, take the change's scope and boundaries from the request's intent; see [specifications](references/specifications.md#without-specifications).
+2. Identify the feature the request concerns, its specification, and its code home, and follow the project's workflow; see [specifications](references/specifications.md#workflow-and-home).
 3. Open the reference for the task. Open an example when its pattern applies.
 
 ## Task routing

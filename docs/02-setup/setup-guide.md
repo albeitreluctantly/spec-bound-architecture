@@ -44,7 +44,7 @@ The architecture rules state what holds in every codebase. The project conventio
 
 | Convention                            | Example                                                                                                                       |
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Specification home and folder mapping | `specs/catalog/create-product.md` → `src/features/catalog/create-product/`, or no specifications                              |
+| Workflow and specification home       | Intent-first, spec-first, or code-as-spec; `specs/catalog/create-product.md` → `src/features/catalog/create-product/`        |
 | Stack                                 | UI, navigation, state, data access, dependency injection, testing                                                             |
 | Coding practices                      | An `onIntent` callback for intents; `Page` as a page entry's export; aliases for other code homes; how errors are represented |
 | Verification commands                 | Lint, typecheck, and test commands                                                                                            |
@@ -55,11 +55,15 @@ Record them in either of two ways:
 - **Template:** copy the [conventions template](./agent-kit/conventions-template.md) into a new file, such as `docs/conventions.md`, and fill in the placeholders.
 - **Existing instructions:** add the same items to the project's existing conventions or agent instructions file.
 
-## 3. Choose a specification home
+## 3. Choose a workflow and specification home
 
-Specifications can live in the repository or in an external knowledge base. Either way, record in the conventions how a specification's place maps to a feature folder, for example `specs/catalog/create-product.md` → `src/features/catalog/create-product/`.
+The workflow decides how a request reaches the code:
 
-A project can also work without maintained specifications. The relationship then reverses: the code serves as the specification. [Workflows](../05-workflows/workflows.md#spec-driven-development) describes both options.
+- **Intent-first**, the default: agents identify the owning feature from a request, update its specification, and then change the code.
+- **Spec-first:** agents implement only what the specifications already describe.
+- **Code-as-spec:** the project keeps no specifications, and the code serves as the specification. Agents go straight from the request to the code.
+
+Intent-first and spec-first projects keep specifications in the repository or in an external knowledge base. Either way, record in the conventions how a specification's place maps to a feature folder, for example `specs/catalog/create-product.md` → `src/features/catalog/create-product/`. [Workflows](../05-workflows/workflows.md#spec-driven-development) describes these options in detail.
 
 ## 4. Enforce imports with ESLint
 
