@@ -3,7 +3,7 @@
 A frontend architecture built around capabilities, explicit ownership, and public contracts. Features keep related behavior together; shared code supplies common concepts and infrastructure; parents and the application connect the parts.
 
 > [!NOTE]
-> Work in progress. The manifesto, overview, and setup guide are complete. The agent kit is a draft under review; the remaining documents are outlines.
+> Work in progress. The manifesto, overview, and setup guide are complete. The agent kit's architecture rules are complete and its skill is a draft under review; the remaining documents are outlines.
 
 ## 1. Overview
 
