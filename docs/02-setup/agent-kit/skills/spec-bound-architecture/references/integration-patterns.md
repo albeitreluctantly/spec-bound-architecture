@@ -30,12 +30,12 @@ The feature emits a semantic intent; `app/` fulfills it by navigating, presentin
 
 ## Extension
 
-The host declares typed, semantically named anchors and the context each receives. Contributors supply render functions; `app/` maps contributors to anchors and places any contributor provider around the host.
+The host declares **anchors**: named places in its layout, each with the context it passes. It receives them filled through its `extensions` prop. A **contribution** is a feature's render functions keyed by anchor name; `app/` passes it to the host as `extensions` and places any contributor provider around it.
 
 - The host renders foreign UI only through render functions it receives.
 - Name anchors by their place in the host (`cardActions`, `footer`), not generically (`content`).
 - An anchor deep in the host's tree uses a slot from an extension helper instead of threading props.
-- Contributions on one host do not coordinate with each other; shared behavior between them is Core coordination.
+- Contributions on one host stay unaware of each other. `app/` passes data from one to another, as with contribution hooks; state that several features share is Core coordination.
 
 See [Extension](../examples/extension.md).
 
@@ -86,15 +86,3 @@ Resolve coupling at the narrowest scope the specifications and actual reuse just
 3. **Shared foundation.** The coupled concept is needed by several top-level features: move it to `core/`; the features depend on it.
 
 Coupling strength alone never redraws feature boundaries. When the coupling contradicts the specifications, raise a boundary question.
-
-## Bridging hosts
-
-When a feature wraps a shared shell that has its own anchors, map the shell's anchor names and context to the feature's own at the wrapper.
-
-```tsx
-<ProductGrid
-  extensions={{
-    cardFooter: ({ productId }) => extensions?.productActions?.({ productId, listId }),
-  }}
-/>
-```

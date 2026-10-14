@@ -1,6 +1,6 @@
 # Screen feature
 
-**Create product** is a screen in the catalog. The project conventions map `specs/catalog/create-product.md` to `src/features/catalog/create-product/`, so the specification's place decides the folder.
+**Create product** is a screen in the catalog. The project conventions map `specs/catalog/create-product.md` to `src/features/catalog/create-product/`.
 
 ## Specification
 
@@ -17,16 +17,16 @@ Catalog staff add a product that becomes available in **Browse products**.
 4. WHEN staff cancel, discard the draft and open **Browse products**.
 ```
 
-Opening Browse products is a Handoff: Create product requests it with an intent, and `app/` fulfills the intent.
+Opening Browse products is a Handoff.
 
 ## Folders
 
 ```text
 src/
   app/routes/
-    CreateProductRoute.tsx   # mounts the page and fulfills its intents
+    CreateProductRoute.tsx
   features/catalog/
-    index.ts                 # re-exports the subfeature entries
+    index.ts
     shared/                  # product model and service; see Shared kernel
     browse-products/         # sibling subfeature
     create-product/
@@ -36,7 +36,7 @@ src/
       validateDraft.ts       # private
 ```
 
-Every criterion maps to code inside `create-product/`; only the fulfillment of the intent lives in `app/`:
+## Criteria to code
 
 | Criterion | Code |
 | --- | --- |
@@ -77,8 +77,6 @@ export function CreateProduct({ onIntent }: CreateProductProps) {
 }
 ```
 
-`ProductForm` shows field errors and keeps the draft until `validateDraft` accepts it, then submits. The feature decides when to leave and names what it needs; the route path and the router stay in `app/`. Its imports stay within its own folder, the catalog's `shared/`, and `library/`.
-
 ## Public entries
 
 `src/features/catalog/create-product/index.ts`
@@ -94,7 +92,7 @@ export * as BrowseProducts from './browse-products';
 export * as CreateProduct from './create-product';
 ```
 
-The entry exports the page alone; its props carry the intent type. The catalog has no combined-experience specification, so its entry re-exports the subfeature entries for `app/`.
+The catalog has no combined-experience specification, so its entry re-exports the subfeature entries for `app/`.
 
 ## Mounting in the application
 
@@ -121,5 +119,3 @@ export function CreateProductRoute() {
   );
 }
 ```
-
-The route mounts the page through the catalog's entry and turns each intent into navigation.

@@ -51,11 +51,11 @@ export type Cart = { lines: ReadonlyArray<CartLine> };
 
 const cartStore = createStore<Cart>({ lines: [] });
 
-export function useCart(): Cart {
+export function useCart() {
   return useStore(cartStore);
 }
 
-export function readCart(): Cart {
+export function readCart() {
   return cartStore.read();
 }
 
@@ -71,7 +71,7 @@ export function addToCart(product: { id: string; price: number }) {
   });
 }
 
-export function countCartItems(cart: Cart): number {
+export function countCartItems(cart: Cart) {
   return cart.lines.reduce((count, line) => count + line.quantity, 0);
 }
 ```
@@ -119,7 +119,7 @@ export type SaveStatus = 'saved' | 'saving' | 'failed';
 
 const saveStatusStore = createStore<SaveStatus>('saved');
 
-export function useSaveStatus(): SaveStatus {
+export function useSaveStatus() {
   return useStore(saveStatusStore);
 }
 

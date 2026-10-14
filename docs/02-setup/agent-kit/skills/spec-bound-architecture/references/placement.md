@@ -17,8 +17,6 @@
 
 Create a parent's `shared/` when two of its subfeatures need the same code: domain types, rules, data access, state, or a reusable capability such as search, filtering, and pagination. Each subfeature keeps its own flow. Shared requirements in the parent specification are a strong clue. A split alone does not create `shared/`.
 
-Keep `shared/` flat: its files sit directly inside it, and `shared/index.ts` exports what the subfeatures use. Give a shared capability its own folder and entry, such as `shared/search/index.ts`, when it has private files of its own.
-
 ## Promotion
 
 Move code from a parent's `shared/` to `core/` when another top-level feature needs it:

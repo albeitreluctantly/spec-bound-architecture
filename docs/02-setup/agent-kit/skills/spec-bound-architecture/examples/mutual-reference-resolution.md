@@ -33,7 +33,7 @@ import { createStore, useStore } from '@library/state';
 
 const selectedStoreStore = createStore<string | null>(null);
 
-export function useSelectedStoreId(): string | null {
+export function useSelectedStoreId() {
   return useStore(selectedStoreStore);
 }
 

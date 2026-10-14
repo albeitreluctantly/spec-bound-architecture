@@ -7,7 +7,7 @@ Each feature, subfeature, and shared module has one public entry file. Everythin
 | May export | Never export |
 | --- | --- |
 | A page or screen component | The internal logic hook or store |
-| Widget fragments and their provider | Private child components |
+| A widget's components, or its provider with the contribution | Private child components |
 | Handlers or functions of a headless feature | Contexts and service implementations |
 | A curated slice of logic another part of the application needs | Helpers used only inside the feature |
 | A view component when a seam requires it | Types no consumer needs by name |

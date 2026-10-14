@@ -94,7 +94,7 @@ function toGa4Item(item: OrderItem) {
   };
 }
 
-export function startGa4Commerce(send: AnalyticsTransport): () => void {
+export function startGa4Commerce(send: AnalyticsTransport) {
   return activity.register(async (event) => {
     switch (event.type) {
       case 'checkoutStarted': {
@@ -123,7 +123,7 @@ export function startGa4Commerce(send: AnalyticsTransport): () => void {
 import { activity } from '@core/activity';
 import type { AnalyticsTransport } from '@library/analytics';
 
-export function startSecondProviderCommerce(send: AnalyticsTransport): () => void {
+export function startSecondProviderCommerce(send: AnalyticsTransport) {
   return activity.register((event) => {
     switch (event.type) {
       case 'checkoutStarted':
@@ -164,7 +164,7 @@ import * as Ga4Commerce from '@features/ga4-commerce';
 import * as SecondProviderCommerce from '@features/second-provider-commerce';
 import { sendToGa4, sendToSecondProvider } from '@library/analytics';
 
-export function startAnalytics(): () => void {
+export function startAnalytics() {
   const stopHandlers = [
     Ga4Commerce.start(sendToGa4),
     SecondProviderCommerce.start(sendToSecondProvider),

@@ -34,7 +34,7 @@ type GiftCandidate = { price: number; tags: ReadonlyArray<string> };
 
 const MAX_GIFT_PRICE = 150;
 
-export function isGiftEligible(product: GiftCandidate): boolean {
+export function isGiftEligible(product: GiftCandidate) {
   return product.tags.includes('giftable') && product.price <= MAX_GIFT_PRICE;
 }
 ```
@@ -71,7 +71,7 @@ A comparator, a predicate, or a handler that replaces a default action follows t
 `src/features/store-locator/geocoding.tsx`
 
 ```tsx
-import { createContext, use, type PropsWithChildren } from 'react';
+import { createContext, type PropsWithChildren } from 'react';
 
 export type Coordinates = { latitude: number; longitude: number };
 
@@ -79,7 +79,7 @@ export type GeocodingService = {
   locate: (address: string) => Promise<Coordinates | null>;
 };
 
-const GeocodingContext = createContext<GeocodingService | null>(null);
+export const GeocodingContext = createContext<GeocodingService>(null!);
 
 export function GeocodingProvider({
   service,
@@ -87,18 +87,12 @@ export function GeocodingProvider({
 }: PropsWithChildren<{ service: GeocodingService }>) {
   return <GeocodingContext value={service}>{children}</GeocodingContext>;
 }
-
-export function useGeocoding(): GeocodingService {
-  const service = use(GeocodingContext);
-  if (!service) throw new Error('Store locator requires a GeocodingProvider');
-  return service;
-}
 ```
 
 `src/features/store-locator/index.ts`
 
 ```ts
-export { GeocodingProvider, type GeocodingService } from './geocoding';
+export { GeocodingProvider } from './geocoding';
 export { StoreLocator as Page } from './StoreLocator';
 ```
 
@@ -109,7 +103,7 @@ import type { PropsWithChildren } from 'react';
 import * as StoreLocator from '@features/store-locator';
 import { createMapGeocoding } from '@library/geocoding';
 
-const geocoding: StoreLocator.GeocodingService = createMapGeocoding();
+const geocoding = createMapGeocoding();
 
 export function AppProviders({ children }: PropsWithChildren) {
   return <StoreLocator.GeocodingProvider service={geocoding}>{children}</StoreLocator.GeocodingProvider>;
@@ -127,13 +121,7 @@ The provider adapter in `library/geocoding` knows no product domain. A dependenc
 ```ts
 import { useCart } from '@core/cart';
 
-export type SummaryLine = { label: string; amount: number };
-
-export type OrderSummary = {
-  lines: ReadonlyArray<SummaryLine>;
-};
-
-export function useOrderSummary(): OrderSummary {
+export function useOrderSummary() {
   const cart = useCart();
   return {
     lines: cart.lines.map((line) => ({
@@ -148,7 +136,8 @@ export function useOrderSummary(): OrderSummary {
 
 ```tsx
 import { Row, Stack, Text } from '@library/ui';
-import type { SummaryLine } from './useOrderSummary';
+
+type SummaryLine = { label: string; amount: number };
 
 type OrderSummaryViewProps = { lines: ReadonlyArray<SummaryLine> };
 

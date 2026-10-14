@@ -12,7 +12,7 @@ import { en } from './en';
 export type MessageKey = keyof typeof en;
 export type MessageParams = Readonly<Record<string, string | number>>;
 
-export function translate(key: MessageKey, params: MessageParams = {}): string {
+export function translate(key: MessageKey, params: MessageParams = {}) {
   return en[key].replace(/\{(\w+)\}/g, (placeholder, name: string) =>
     name in params ? String(params[name]) : placeholder,
   );
@@ -49,7 +49,7 @@ export class AppError extends Error {
   }
 }
 
-export function describeError(error: unknown): string {
+export function describeError(error: unknown) {
   return error instanceof AppError
     ? translate(error.messageKey, error.params)
     : translate('errors.unexpected');

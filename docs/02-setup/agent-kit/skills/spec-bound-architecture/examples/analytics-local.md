@@ -134,12 +134,7 @@ The mapping is a pure function the tests can check directly. Starting the handle
 ```ts
 import type { VehicleEvent } from '../shared/activity';
 
-type AmplitudeEvent = {
-  name: string;
-  properties: Readonly<Record<string, unknown>>;
-};
-
-export function toAmplitudeEvent(event: VehicleEvent): AmplitudeEvent {
+export function toAmplitudeEvent(event: VehicleEvent) {
   switch (event.type) {
     case 'vehicleViewed':
       return { name: 'Vehicle Viewed', properties: { vehicle_id: event.vehicleId } };
@@ -156,7 +151,7 @@ import type { AnalyticsTransport } from '@library/analytics';
 import { vehicleEvents } from '../shared/activity';
 import { toAmplitudeEvent } from './toAmplitudeEvent';
 
-export function startVehicleAnalytics(send: AnalyticsTransport): () => void {
+export function startVehicleAnalytics(send: AnalyticsTransport) {
   return vehicleEvents.register((event) => {
     const { name, properties } = toAmplitudeEvent(event);
     return send(name, properties);
@@ -186,7 +181,7 @@ The parent entry also re-exports the Browse, Details, and Saved entries for appl
 import * as Vehicles from '@features/vehicles';
 import { sendToAmplitude } from '@library/analytics';
 
-export function startAnalytics(): () => void {
+export function startAnalytics() {
   return Vehicles.Analytics.start(sendToAmplitude);
 }
 ```

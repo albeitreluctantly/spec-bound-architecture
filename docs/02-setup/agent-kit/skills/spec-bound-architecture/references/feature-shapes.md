@@ -10,13 +10,10 @@ The entry exports the page, commonly as `Page`. Outward requests are intents in 
 
 ## Widget
 
-UI rendered inside a host the feature does not own. The host works without it.
+UI rendered inside a host the feature does not own. The host works without it. The widget's specification decides its form:
 
-- **Single component:** one component placed at one host anchor.
-- **Fragments:** a namespace of components for several anchors, such as an action button and a summary bar.
-- Fragments that share ephemeral UI state (a selection, an open panel) share it through a provider the widget exports. The application places that provider around the host. Fragments that share durable or server state read it from shared code instead.
-
-See [Widget feature](../examples/widget-feature.md) and [Extension](../examples/extension.md).
+- **Standalone widget:** the specification names no placement. The entry exports the widget's components, and the host's specification or `app/` places them. See [Widget feature](../examples/widget-feature.md).
+- **Contribution:** the specification places the widget in a host. The widget maps its fragments to the host's anchors, and its provider or contribution hook hands that mapping to `app/`. See [Extension](../examples/extension.md).
 
 ## Headless
 

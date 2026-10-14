@@ -114,10 +114,6 @@ Resolve coupling at the narrowest scope justified by the specifications and actu
 
 Use the required connection to choose a pattern: handoff → Delegation; live UI at a host anchor → Extension; reused shell → Substrate consumer; common state/projection → Core coordination; common domain capability → Shared kernel; supported variation → Modification seams; composition-specific data passing → Composition-root distribution; mutual coupling → Mutual reference resolution.
 
-## Bridging hosts
-
-When a feature wraps a shared shell with extension anchors, map names and context at the wrapper boundary. The feature and shell do not need identical anchor vocabularies.
-
 ## Verification
 
 Feature behavior and outward requirements; contract compatibility and application wiring.

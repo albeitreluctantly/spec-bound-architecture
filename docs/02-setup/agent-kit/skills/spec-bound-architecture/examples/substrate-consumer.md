@@ -1,6 +1,6 @@
 # Substrate consumer
 
-**Browse products** and **Wishlist** both show products in a grid with the same card layout. The grid is a reusable shell; each feature configures it.
+**Browse products** and **Wishlist** both show products in a grid with the same card layout. The grid is a reusable shell; each feature configures it. **Price alerts** adds an alert button to each wishlist card.
 
 ## Placement
 
@@ -10,32 +10,49 @@ The shell knows the `Product` model, so it is domain-aware. Two top-level featur
 src/
   core/product-grid/
     index.ts
+    anchors.ts
     ProductGrid.tsx
+    ProductTile.tsx
   core/products/
     index.ts             # Product model
   features/catalog/browse-products/
   features/wishlist/
+  features/price-alerts/
 ```
 
 ## Shell
 
-The shell accepts configuration and typed extension slots. It owns layout, not either feature's behavior.
+The shell owns layout and its anchors, not either feature's behavior.
+
+`src/core/product-grid/anchors.ts`
+
+```ts
+import { createExtensions, type Extensions } from '@library/extensions';
+
+export type ProductGridAnchors = {
+  leadingItem: void;
+  cardActions: { productId: string };
+};
+
+export type ProductGridExtensions = Extensions<ProductGridAnchors>;
+
+export const { ExtensionsProvider, ExtensionSlot } =
+  createExtensions<ProductGridAnchors>();
+```
 
 `src/core/product-grid/ProductGrid.tsx`
 
 ```tsx
-import type { ReactNode } from 'react';
 import type { Product } from '@core/products';
-import { Card, Grid, Text } from '@library/ui';
+import { Grid } from '@library/ui';
+import { ExtensionsProvider, type ProductGridExtensions } from './anchors';
+import { ProductTile } from './ProductTile';
 
 type ProductGridProps = {
   products: ReadonlyArray<Product>;
   columnCount?: 2 | 3;
   showsPrices?: boolean;
-  extensions?: {
-    leadingItem?: () => ReactNode;
-    cardFooter?: (context: { productId: string }) => ReactNode;
-  };
+  extensions?: ProductGridExtensions;
 };
 
 export function ProductGrid({
@@ -45,16 +62,34 @@ export function ProductGrid({
   extensions,
 }: ProductGridProps) {
   return (
-    <Grid columnCount={columnCount}>
-      {extensions?.leadingItem?.()}
-      {products.map((product) => (
-        <Card key={product.id}>
-          <Text>{product.name}</Text>
-          {showsPrices && <Text>{product.price.toFixed(2)}</Text>}
-          {extensions?.cardFooter?.({ productId: product.id })}
-        </Card>
-      ))}
-    </Grid>
+    <ExtensionsProvider extensions={extensions}>
+      <Grid columnCount={columnCount}>
+        {extensions?.leadingItem?.()}
+        {products.map((product) => (
+          <ProductTile key={product.id} product={product} showsPrice={showsPrices} />
+        ))}
+      </Grid>
+    </ExtensionsProvider>
+  );
+}
+```
+
+`src/core/product-grid/ProductTile.tsx`
+
+```tsx
+import type { Product } from '@core/products';
+import { Card, Text } from '@library/ui';
+import { ExtensionSlot } from './anchors';
+
+type ProductTileProps = { product: Product; showsPrice: boolean };
+
+export function ProductTile({ product, showsPrice }: ProductTileProps) {
+  return (
+    <Card>
+      <Text>{product.name}</Text>
+      {showsPrice && <Text>{product.price.toFixed(2)}</Text>}
+      <ExtensionSlot name="cardActions" context={{ productId: product.id }} />
+    </Card>
   );
 }
 ```
@@ -63,20 +98,23 @@ export function ProductGrid({
 
 ```ts
 export { ProductGrid } from './ProductGrid';
+export type { ProductGridAnchors, ProductGridExtensions } from './anchors';
 ```
 
-## Consumers
-
-Each feature configures the shell for its own specification.
+## Consumer
 
 `src/features/wishlist/WishlistPage.tsx`
 
 ```tsx
-import { ProductGrid } from '@core/product-grid';
+import { ProductGrid, type ProductGridExtensions } from '@core/product-grid';
 import { Button } from '@library/ui';
 import { removeFromWishlist, useWishlistProducts } from './wishlistService';
 
-export function WishlistPage() {
+type WishlistPageProps = {
+  extensions?: Pick<ProductGridExtensions, 'cardActions'>;
+};
+
+export function WishlistPage({ extensions }: WishlistPageProps) {
   const products = useWishlistProducts();
 
   return (
@@ -84,8 +122,11 @@ export function WishlistPage() {
       products={products}
       columnCount={3}
       extensions={{
-        cardFooter: ({ productId }) => (
-          <Button label="Remove" onPress={() => removeFromWishlist(productId)} />
+        cardActions: (context) => (
+          <>
+            <Button label="Remove" onPress={() => removeFromWishlist(context.productId)} />
+            {extensions?.cardActions?.(context)}
+          </>
         ),
       }}
     />
@@ -93,6 +134,42 @@ export function WishlistPage() {
 }
 ```
 
-The Remove action belongs to Wishlist and fills the shell's slot from inside the feature. When a slot must receive a different feature's live widget, the consuming feature exposes its own anchor and `app/` fills it; see [Extension](extension.md) and Bridging hosts in [integration patterns](../references/integration-patterns.md#bridging-hosts).
+`src/features/wishlist/index.ts`
+
+```ts
+export { WishlistPage as Page } from './WishlistPage';
+```
+
+## Contributor
+
+`src/features/price-alerts/cardActions.tsx`
+
+```tsx
+import type { ProductGridAnchors } from '@core/product-grid';
+import { PriceAlertButton } from './PriceAlertButton';
+
+export const cardActions = ({ productId }: ProductGridAnchors['cardActions']) => (
+  <PriceAlertButton productId={productId} />
+);
+```
+
+`src/features/price-alerts/index.ts`
+
+```ts
+export { cardActions } from './cardActions';
+```
+
+## Composition wiring
+
+`src/app/routes/WishlistRoute.tsx`
+
+```tsx
+import * as PriceAlerts from '@features/price-alerts';
+import * as Wishlist from '@features/wishlist';
+
+export function WishlistRoute() {
+  return <Wishlist.Page extensions={{ cardActions: PriceAlerts.cardActions }} />;
+}
+```
 
 Browse products would use the same shell with its own configuration; neither feature imports the other.

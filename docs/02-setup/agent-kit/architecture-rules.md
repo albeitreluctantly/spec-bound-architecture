@@ -18,10 +18,12 @@ Spec-bound Architecture organizes code around specified capabilities: each featu
 | `library/`  | Domain-independent infrastructure: UI primitives, utilities, and technical services          |
 | `features/` | Specified capabilities, one folder per feature specification, subfeatures when defined       |
 
+Start `core/` with a flat structure and group it by domain area as needed.
+
 ## Features
 
 - A feature owns a bounded capability and its explicit contracts. It may serve a person or a downstream system, such as analytics.
-- Feature folders mirror the specification structure. A parent specification that groups separate subfeature specifications becomes a parent folder with matching subfeature folders.
+- Feature folders mirror the specification structure. A parent specification that groups separate subfeature specifications becomes a parent folder with matching subfeature folders. Keep a feature flat unless its specifications define subfeatures.
 - A parent's `shared/` holds code its subfeatures actually share. Code used by one subfeature stays inside it; a split alone does not create `shared/`.
 - A parent composes its subfeatures inside its own implementation only when the parent's specification defines their combined experience. Otherwise its public entry re-exports their entries for application wiring.
 
