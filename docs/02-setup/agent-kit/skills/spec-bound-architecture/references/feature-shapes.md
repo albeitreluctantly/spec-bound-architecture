@@ -17,7 +17,7 @@ UI rendered inside a host the feature does not own. The host works without it. T
 
 ## Headless
 
-A capability without UI: functions, handlers, or a hook. Its consumer may be the application (link resolution, background work) or a downstream system (measurement). It still owns its behavior and contracts, and it still connects through intents, shared contracts, and composition. See [Headless feature](../examples/headless-feature.md) and [analytics](analytics.md).
+A capability without UI: functions, handlers, or a hook. Its consumer may be the application or a downstream system, such as measurement. It still owns its behavior and contracts, and it still connects through intents, shared contracts, and composition. See [Headless feature](../examples/headless-feature.md) and [analytics](analytics.md).
 
 ## Separating logic from view
 

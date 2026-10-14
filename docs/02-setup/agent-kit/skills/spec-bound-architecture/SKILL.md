@@ -42,7 +42,7 @@ TypeScript and React illustrate the mechanisms. Apply them through the host proj
 | --- | --- | --- |
 | Feature types | [Screen feature](examples/screen-feature.md) | One specification mapped to code: isolation, intents, public entry, route mounting |
 | | [Widget feature](examples/widget-feature.md) | A standalone widget with its own data and intents, placed by `app/` |
-| | [Headless feature](examples/headless-feature.md) | A capability without UI that emits intents |
+| | [Headless feature](examples/headless-feature.md) | Capabilities without UI: a link-triggered function, a hook, and background work |
 | Integration patterns | [Delegation](examples/delegation.md) | Navigation, an overlay handle, a sign-in gate with continuation |
 | | [Extension](examples/extension.md) | Host anchors and slots; a contribution widget filling them |
 | | [Substrate consumer](examples/substrate-consumer.md) | Configuring a shared UI shell |
