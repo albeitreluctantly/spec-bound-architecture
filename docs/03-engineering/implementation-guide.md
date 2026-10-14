@@ -121,5 +121,3 @@ When a feature wraps a shared shell with extension anchors, map names and contex
 ## Verification
 
 Feature behavior and outward requirements; contract compatibility and application wiring.
-
-See [Recipes](./recipes.md) for end-to-end scenarios.

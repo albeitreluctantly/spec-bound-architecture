@@ -7,46 +7,52 @@ A frontend architecture built around capabilities, explicit ownership, and publi
 
 ## 1. Overview
 
-| Read in order                                              | Subject                                                                                |
-| ---------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| 1. [Manifesto](./docs/01-overview/manifesto.md)            | Architectural principles: ownership, contracts, dependencies, and composition          |
-| 2. [Architecture overview](./docs/01-overview/overview.md) | A catalog example: feature dependencies, public exports, and parent/application wiring |
+| Document                                                   | Subject                                                                                | Status   |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------- |
+| 1. [Manifesto](./docs/01-overview/manifesto.md)            | Architectural principles: ownership, contracts, dependencies, and composition          | Complete |
+| 2. [Architecture overview](./docs/01-overview/overview.md) | A catalog example: feature dependencies, public exports, and parent/application wiring | Complete |
 
 ## 2. Setup
 
-- [Setup guide](./docs/02-setup/setup-guide.md) — layout, conventions, ESLint, and agent kit installation.
-- [Agent kit](./docs/02-setup/agent-kit/) — files copied into a codebase for its agents: the [architecture rules](./docs/02-setup/agent-kit/architecture-rules.md), a [conventions template](./docs/02-setup/agent-kit/conventions-template.md), the [ESLint configuration](./docs/02-setup/agent-kit/eslint.config.js), and the [`spec-bound-architecture` skill](./docs/02-setup/agent-kit/skills/spec-bound-architecture/SKILL.md). Draft under review.
+| Document                                      | Subject                                                                                                                                                                                                                                                                                                                                                                         | Status             |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| [Setup guide](./docs/02-setup/setup-guide.md) | Layout, conventions, ESLint, and agent kit installation                                                                                                                                                                                                                                                                                                                         | Complete           |
+| [Agent kit](./docs/02-setup/agent-kit/)       | Files copied into a codebase for its agents: [architecture rules](./docs/02-setup/agent-kit/architecture-rules.md), [conventions template](./docs/02-setup/agent-kit/conventions-template.md), [ESLint configuration](./docs/02-setup/agent-kit/eslint.config.js), and the [`spec-bound-architecture` skill](./docs/02-setup/agent-kit/skills/spec-bound-architecture/SKILL.md) | Skill under review |
 
 ## 3. Engineering
 
-| Document                                                              | Subject                                                                  | Status               |
-| --------------------------------------------------------------------- | ------------------------------------------------------------------------ | -------------------- |
-| [Architecture guide](./docs/03-engineering/architecture-guide.md)     | Structural rules, placement, import boundaries, and public interfaces    | Outline; targets 0.5 |
-| [Implementation guide](./docs/03-engineering/implementation-guide.md) | Feature design, interfaces, state, integration recipes, and verification | Outline; targets 0.5 |
-| [Recipes](./docs/03-engineering/recipes.md)                           | End-to-end local and application-wide analytics                          | Outline; targets 0.5 |
+| Document                                                              | Subject                                                                   | Status               |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------- | -------------------- |
+| [Architecture guide](./docs/03-engineering/architecture-guide.md)     | Structural rules, placement, import boundaries, and public interfaces     | Outline; targets 0.5 |
+| [Implementation guide](./docs/03-engineering/implementation-guide.md) | Feature design, interfaces, state, integration patterns, and verification | Outline; targets 0.5 |
 
 ## 4. Specifications
 
-- [Specification guide](./docs/04-specifications/specification-guide.md) — bounded behavior, shared requirements, contract tables, feature relations, and boundary review. Outline; follows 0.5.
+| Document                                                               | Subject                                                                                        | Status               |
+| ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------- |
+| [Specification guide](./docs/04-specifications/specification-guide.md) | Bounded behavior, shared requirements, contract tables, feature relations, and boundary review | Outline; follows 0.5 |
 
 ## 5. Workflows
 
-- [Workflows](./docs/05-workflows/workflows.md) — main spec-driven approach and specification homes, human-only execution, no-maintained-spec option, gradual adoption, and agent coordination. Outline; follows 0.5.
-- [Agent roster](./docs/05-workflows/agent-roster.md) — responsibilities and handoffs. Outline; follows 0.5.
+| Document                                            | Subject                                                                                                                                      | Status               |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| [Workflows](./docs/05-workflows/workflows.md)       | Main spec-driven approach and specification homes, human-only execution, no-maintained-spec option, gradual adoption, and agent coordination | Outline; follows 0.5 |
+| [Agent roster](./docs/05-workflows/agent-roster.md) | Responsibilities and handoffs                                                                                                                | Outline; follows 0.5 |
 
 ## Prior art
 
 Spec-bound Architecture builds on ideas from these approaches and tools, among many others in the wider body of work on modular and feature-based design.
 
-- [Vertical Slice Architecture](https://www.jimmybogard.com/vertical-slice-architecture/) — Jimmy Bogard
+- [Vertical Slice Architecture](https://www.jimmybogard.com/vertical-slice-architecture/)
 - [Vertical slice architecture in Node.js and TypeScript: one folder per use case](https://thetshaped.dev/p/vertical-slice-architecture-in-nodejs-typescript-one-folder-per-use-case)
 - [Screaming architecture and colocation in Node.js, TypeScript, and React](https://thetshaped.dev/p/screaming-architecture-and-colocation-nodejs-typescript-react)
-- [The Vertical Codebase](https://tkdodo.eu/blog/the-vertical-codebase) — TkDodo
-- [Feature Garden](https://github.com/Vladyslav-Murashchenko/feature-garden) — Vladyslav Murashchenko
+- [The Hive: a scaling and supple architecture style](https://www.youtube.com/watch?v=JZBsy6PsCRY)
+- [The Vertical Codebase](https://tkdodo.eu/blog/the-vertical-codebase)
+- [Feature Garden](https://github.com/Vladyslav-Murashchenko/feature-garden)
 - [Bulletproof React](https://github.com/alan2207/bulletproof-react/)
 - [Feature-Sliced Design](https://feature-sliced.design/)
 - [feature-u](https://feature-u.js.org/2.0.0/)
-- [improve-codebase-architecture skill](https://github.com/mattpocock/skills/blob/main/skills/engineering/improve-codebase-architecture/SKILL.md) — Matt Pocock
+- [improve-codebase-architecture skill](https://github.com/mattpocock/skills/blob/main/skills/engineering/improve-codebase-architecture/SKILL.md)
 
 > [!NOTE]
 > **About the name**
