@@ -4,7 +4,7 @@
 
 Create the project conventions file from the template shipped with the architecture rules, or confirm the existing one covers:
 
-- the specification home and how a specification maps to a feature folder;
+- the workflow and, unless it is code-as-spec, the specification home and its mapping to feature folders;
 - the stack, coding practices, and verification commands.
 
 Ask the team for any value you cannot determine. Do not choose a specification home on the team's behalf.
