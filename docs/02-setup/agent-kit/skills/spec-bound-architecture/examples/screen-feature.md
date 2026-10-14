@@ -1,48 +1,57 @@
 # Screen feature
 
-A catalog has two specifications, **Browse products** and **Create product**, grouped under a catalog parent. Both are screens.
+**Create product** is a screen in the catalog. The project conventions map `specs/catalog/create-product.md` to `src/features/catalog/create-product/`, so the specification's place decides the folder.
 
-## Specification excerpt
+## Specification
 
-**Create product** lets catalog staff add a product that becomes available in **Browse products**.
+`specs/catalog/create-product.md`
+
+```md
+# Create product
+
+Catalog staff add a product that becomes available in **Browse products**.
 
 1. WHEN staff open Create product, the form shows an empty draft with Name, Price, and Description.
-2. IF a submitted draft violates the validation rules, THEN show field errors, keep the draft, and save nothing.
-3. WHEN staff submit a valid draft, save the product.
-4. WHEN the product is saved, open **Browse products**.
-5. WHEN staff cancel, discard the draft and open **Browse products**.
+2. IF a submitted draft is invalid, THEN show field errors, keep the draft, and save nothing.
+3. WHEN staff submit a valid draft, save the product, then open **Browse products**.
+4. WHEN staff cancel, discard the draft and open **Browse products**.
+```
 
-Opening Browse products is a Handoff: Create product requests it; `app/` fulfills the request.
+Opening Browse products is a Handoff: Create product requests it with an intent, and `app/` fulfills the intent.
 
 ## Folders
 
 ```text
 src/
   app/routes/
-    CatalogRoute.tsx
-    CreateProductRoute.tsx
+    CreateProductRoute.tsx   # mounts the page and fulfills its intents
   features/catalog/
-    index.ts
-    browse-products/
-      index.ts
-      BrowseProducts.tsx
-      ProductList.tsx          # private
-      useProducts.ts           # private
+    index.ts                 # re-exports the subfeature entries
+    shared/                  # product model and service; see Shared kernel
+    browse-products/         # sibling subfeature
     create-product/
-      index.ts
+      index.ts               # public entry
       CreateProduct.tsx
-      ProductForm.tsx          # private
-      validateDraft.ts         # private
-    shared/products/
-      index.ts                 # product contract and repository used by both
+      ProductForm.tsx        # private
+      validateDraft.ts       # private
 ```
+
+Every criterion maps to code inside `create-product/`; only the fulfillment of the intent lives in `app/`:
+
+| Criterion | Code |
+| --- | --- |
+| 1. Empty draft | `ProductForm.tsx` |
+| 2. Invalid draft | `validateDraft.ts`, applied by `ProductForm.tsx` |
+| 3. Save, then open Browse products | `CreateProduct.tsx`: `productService.create`, then the `browseProducts` intent |
+| 4. Cancel | `CreateProduct.tsx`: the `browseProducts` intent |
+| Handoff to Browse products | `CreateProductRoute.tsx`: navigation for `browseProducts` |
 
 ## Owned behavior and intents
 
 `src/features/catalog/create-product/CreateProduct.tsx`
 
 ```tsx
-import { products } from '../shared/products';
+import { productService } from '../shared';
 import { ProductForm } from './ProductForm';
 import { validateDraft } from './validateDraft';
 
@@ -57,8 +66,9 @@ export function CreateProduct({ onIntent }: CreateProductProps) {
 
   return (
     <ProductForm
+      validate={validateDraft}
       onSubmit={async (draft) => {
-        await products.create(validateDraft(draft));
+        await productService.create(draft);
         browseProducts();
       }}
       onCancel={browseProducts}
@@ -67,33 +77,7 @@ export function CreateProduct({ onIntent }: CreateProductProps) {
 }
 ```
 
-The feature decides when to leave and says what it needs, not where to go. The form, validation, pending state, and errors stay private.
-
-`src/features/catalog/browse-products/BrowseProducts.tsx`
-
-```tsx
-import { ProductList } from './ProductList';
-import { useProducts } from './useProducts';
-
-type BrowseProductsIntent = { type: 'createProduct' };
-
-type BrowseProductsProps = {
-  onIntent: (intent: BrowseProductsIntent) => void;
-};
-
-export function BrowseProducts({ onIntent }: BrowseProductsProps) {
-  const products = useProducts();
-
-  return (
-    <ProductList
-      products={products}
-      onCreatePress={() => onIntent({ type: 'createProduct' })}
-    />
-  );
-}
-```
-
-A private button callback becomes a named intent before it crosses the feature boundary.
+`ProductForm` shows field errors and keeps the draft until `validateDraft` accepts it, then submits. The feature decides when to leave and names what it needs; the route path and the router stay in `app/`. Its imports stay within its own folder, the catalog's `shared/`, and `library/`.
 
 ## Public entries
 
@@ -103,12 +87,6 @@ A private button callback becomes a named intent before it crosses the feature b
 export { CreateProduct as Page } from './CreateProduct';
 ```
 
-`src/features/catalog/browse-products/index.ts`
-
-```ts
-export { BrowseProducts as Page } from './BrowseProducts';
-```
-
 `src/features/catalog/index.ts`
 
 ```ts
@@ -116,33 +94,11 @@ export * as BrowseProducts from './browse-products';
 export * as CreateProduct from './create-product';
 ```
 
-The catalog parent has no combined-experience specification, so it only re-exports the subfeature entries.
+The entry exports the page alone; its props carry the intent type. The catalog has no combined-experience specification, so its entry re-exports the subfeature entries for `app/`.
 
-## Application wiring
+## Mounting in the application
 
 `useRouter` stands for the project's navigation API.
-
-`src/app/routes/CatalogRoute.tsx`
-
-```tsx
-import { BrowseProducts } from '@features/catalog';
-import { useRouter } from '@library/navigation';
-
-export function CatalogRoute() {
-  const router = useRouter();
-
-  return (
-    <BrowseProducts.Page
-      onIntent={(intent) => {
-        switch (intent.type) {
-          case 'createProduct':
-            return router.push('/catalog/create');
-        }
-      }}
-    />
-  );
-}
-```
 
 `src/app/routes/CreateProductRoute.tsx`
 
@@ -166,7 +122,4 @@ export function CreateProductRoute() {
 }
 ```
 
-## Verification
-
-- Feature tests drive the form and assert the emitted intent: saving a valid draft emits `browseProducts` after the save; an invalid draft emits nothing.
-- An integration check confirms the route fulfills `browseProducts` by opening the catalog.
+The route mounts the page through the catalog's entry and turns each intent into navigation.

@@ -58,7 +58,7 @@ export function BrowseProducts({ extensions }: BrowseProductsProps) {
 
 ```tsx
 import { Card, Text } from '@library/ui';
-import type { Product } from '../shared/products';
+import type { Product } from '../shared';
 import { ExtensionSlot } from './anchors';
 
 type ProductCardProps = { product: Product };

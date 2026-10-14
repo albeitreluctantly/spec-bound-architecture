@@ -71,7 +71,3 @@ export function LinkHandler() {
   return null;
 }
 ```
-
-## Verification
-
-The feature is a pure function: tests pass URLs and assert the returned intents, including the unrecognized case. Integration checks confirm `app/` routes each intent.

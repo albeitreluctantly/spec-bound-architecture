@@ -40,7 +40,7 @@ TypeScript and React illustrate the mechanisms. Apply them through the host proj
 
 | Group | Example | Shows |
 | --- | --- | --- |
-| Feature types | [Screen feature](examples/screen-feature.md) | Specification to folders, intents, public entries, route wiring |
+| Feature types | [Screen feature](examples/screen-feature.md) | One specification mapped to code: isolation, intents, public entry, route mounting |
 | | [Widget feature](examples/widget-feature.md) | Fragments for several anchors sharing ephemeral state |
 | | [Headless feature](examples/headless-feature.md) | A capability without UI that emits intents |
 | Integration patterns | [Delegation](examples/delegation.md) | Navigation, an overlay handle, a sign-in gate with continuation |

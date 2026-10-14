@@ -9,7 +9,7 @@ A seam lets an integrating feature or `app/` vary a feature's behavior without e
 `src/features/catalog/browse-products/BrowseProducts.tsx`
 
 ```tsx
-import type { Product } from '../shared/products';
+import type { Product } from '../shared';
 import { ProductList } from './ProductList';
 import { useProducts } from './useProducts';
 

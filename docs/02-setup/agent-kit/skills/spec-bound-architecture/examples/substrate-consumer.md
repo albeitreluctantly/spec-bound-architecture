@@ -74,7 +74,7 @@ Each feature configures the shell for its own specification.
 ```tsx
 import { ProductGrid } from '@core/product-grid';
 import { Button } from '@library/ui';
-import { removeFromWishlist, useWishlistProducts } from './wishlistRepository';
+import { removeFromWishlist, useWishlistProducts } from './wishlistService';
 
 export function WishlistPage() {
   const products = useWishlistProducts();

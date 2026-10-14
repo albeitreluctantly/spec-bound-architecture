@@ -147,11 +147,12 @@ src/
         ProductForm.tsx
         validateDraft.ts
       shared/
-        products/
-          index.ts
+        index.ts
+        product.ts
+        productService.ts
 ```
 
-The behavior owned by **Create product** is implemented inside `create-product/`. Catalog's common product-data contract and repository live in `shared/products/`, used by both features. The route files consume the catalog's public interface.
+The behavior owned by **Create product** is implemented inside `create-product/`. Catalog's common product-data contract and service live in `shared/`, used by both features. The route files consume the catalog's public interface.
 
 ### Implement the owned behavior
 
@@ -160,7 +161,7 @@ The feature implements both its local behavior and its specified outward request
 `src/features/catalog/create-product/CreateProduct.tsx`
 
 ```tsx
-import { products } from '../shared/products';
+import { productService } from '../shared';
 import { ProductForm } from './ProductForm';
 import { validateDraft } from './validateDraft';
 
@@ -176,7 +177,7 @@ export function CreateProduct({ onIntent }: CreateProductProps) {
   return (
     <ProductForm
       onSubmit={async (draft) => {
-        await products.create(validateDraft(draft));
+        await productService.create(validateDraft(draft));
         requestBrowsing();
       }}
       onCancel={requestBrowsing}
@@ -192,10 +193,10 @@ The requirement to return to **Browse products** is expressed inside creation as
 | Fields, draft editing, cancel action     | Private `ProductForm.tsx`                                                        |
 | Name, price, description rules           | Private `validateDraft.ts`, returning a normalized draft or raising field errors |
 | Pending state, field/save errors, retry  | Private `ProductForm.tsx`, handling its asynchronous submission                  |
-| Save orchestration and request to browse | `CreateProduct.tsx`, using the repository and emitting an intent                 |
+| Save orchestration and request to browse | `CreateProduct.tsx`, using the product service and emitting an intent            |
 | Navigation fulfilling that request       | Application route wiring                                                         |
 
-The shared repository owns persistence and product state. Its writes update the data or invalidate the shared query cache so browsing reflects creation.
+The shared product service owns persistence and product state. Its writes update the data or invalidate the shared query cache so browsing reflects creation.
 
 Browsing expresses its own specified relation in the same way:
 

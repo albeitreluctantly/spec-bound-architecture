@@ -162,7 +162,7 @@ export function markSignedIn() {
 ```tsx
 import { useSession, type SignInIntent } from '@core/session';
 import { Button } from '@library/ui';
-import { saveToWishlist } from './wishlistRepository';
+import { saveToWishlist } from './wishlistService';
 
 type SaveToWishlistButtonProps = {
   productId: string;

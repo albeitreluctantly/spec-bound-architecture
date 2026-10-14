@@ -1,6 +1,6 @@
 # Shared kernel
 
-**Browse products** and **Create product** are subfeatures of the catalog. Both use the product model and repository; the parent specification's shared requirements describe them. The code lives in the catalog's `shared/`.
+**Browse products** and **Create product** are subfeatures of the catalog. Both use the product model and service; the parent specification's shared requirements describe them. The code lives in the catalog's `shared/`.
 
 ## Kernel
 
@@ -9,15 +9,13 @@ src/features/catalog/
   index.ts
   shared/
     index.ts
-    products/
-      index.ts
-      product.ts
-      productRepository.ts
+    product.ts
+    productService.ts
   browse-products/
   create-product/
 ```
 
-`src/features/catalog/shared/products/product.ts`
+`src/features/catalog/shared/product.ts`
 
 ```ts
 export type Product = {
@@ -30,14 +28,14 @@ export type Product = {
 export type ProductDraft = Omit<Product, 'id'>;
 ```
 
-`src/features/catalog/shared/products/productRepository.ts`
+`src/features/catalog/shared/productService.ts`
 
 ```ts
 import type { Product, ProductDraft } from './product';
 
 const storedProducts = new Map<string, Product>();
 
-export const products = {
+export const productService = {
   list: async (): Promise<ReadonlyArray<Product>> => [...storedProducts.values()],
   create: async (draft: ProductDraft): Promise<Product> => {
     const product = { id: crypto.randomUUID(), ...draft };
@@ -47,11 +45,11 @@ export const products = {
 };
 ```
 
-`src/features/catalog/shared/products/index.ts`
+`src/features/catalog/shared/index.ts`
 
 ```ts
 export type { Product, ProductDraft } from './product';
-export { products } from './productRepository';
+export { productService } from './productService';
 ```
 
 Subfeatures import the kernel by relative path, never from each other:
@@ -59,10 +57,10 @@ Subfeatures import the kernel by relative path, never from each other:
 `src/features/catalog/create-product/saveProduct.ts`
 
 ```ts
-import { products, type ProductDraft } from '../shared/products';
+import { productService, type ProductDraft } from '../shared';
 
 export function saveProduct(draft: ProductDraft) {
-  return products.create(draft);
+  return productService.create(draft);
 }
 ```
 
@@ -75,7 +73,7 @@ Code that only Create product uses, such as draft validation, stays in `create-p
 ```text
 src/
   core/products/
-    index.ts              # Product, ProductDraft, products
+    index.ts              # Product, ProductDraft, productService
   features/catalog/
     shared/               # removed if nothing else remains
     browse-products/      # imports '@core/products'
