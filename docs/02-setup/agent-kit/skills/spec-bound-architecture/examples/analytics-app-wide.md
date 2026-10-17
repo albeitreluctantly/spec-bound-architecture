@@ -1,35 +1,38 @@
 # Application-wide analytics
 
-A fictional store measures commerce with GA4 and a second provider whose event names and checkpoints differ. Measurement spans several areas, so the event contracts live in `core/` and each provider integration is its own top-level feature. `createEventBus`, `sendToGa4`, and `sendToSecondProvider` stand for the project's analytics infrastructure in `library/analytics`.
+Rung 3: a fictional store measures commerce with GA4 and Klaviyo, whose event names differ. Measurement spans several areas, so the application's events and their bus live in `core/analytics`, and each provider integration is its own top-level feature. `createEventBus` stands for the project's generic bus helper in `library/`; `ga4Service` and `klaviyoService` stand for provider services in `core/analytics`, built like the one in [Local analytics](analytics-local.md).
 
 ## Measurement specification
 
-| Application event | Emission point | GA4 event | Second provider | Data |
-| --- | --- | --- | --- | --- |
-| `checkoutStarted` | Checkout has opened | `begin_checkout` | `checkout_started` | Current cart |
-| `purchaseCompleted` | The order is confirmed | `purchase` | `order_completed` | The placed order |
+| Event               | Emission point         | GA4 event        | Klaviyo event      | Data             |
+| ------------------- | ---------------------- | ---------------- | ------------------ | ---------------- |
+| `checkoutStarted`   | Checkout has opened    | `begin_checkout` | `Started Checkout` | Current cart     |
+| `purchaseCompleted` | The order is confirmed | `purchase`       | `Placed Order`     | The placed order |
 
-The second provider's names are fictional.
+Provider property names are illustrative; follow each provider's documentation.
 
 ## Folders
 
 ```text
 src/
-  core/events/                         application event contracts and bus
-  core/cart/                           cart reader
+  library/modules/
+    index.ts
+    event-bus/                         generic event bus
+  core/analytics/                      base event type, application events and bus, provider services
+  core/cart/                           cart state
   features/checkout/                   emits checkoutStarted and purchaseCompleted
-  features/ga4-commerce/               GA4 mapping and registration
-  features/second-provider-commerce/   second provider mapping and registration
-  library/analytics/                   event bus and provider transports
+  features/ga4-commerce/               GA4 mapping
+  features/klaviyo-commerce/           Klaviyo mapping
   app/bootstrap.ts
 ```
 
-## Contracts in core
+## Events in core
 
-`src/core/events/index.ts`
+`src/core/analytics/events.ts`
 
 ```ts
-import { createEventBus } from '@library/analytics';
+import { createEventBus } from "@library/modules";
+import type { AnalyticsEvent } from "./event";
 
 export type OrderItem = {
   productId: string;
@@ -45,12 +48,29 @@ export type OrderSnapshot = {
   items: ReadonlyArray<OrderItem>;
 };
 
-export type ApplicationEvent =
-  | { type: 'checkoutStarted'; cartId: string }
-  | { type: 'purchaseCompleted'; order: OrderSnapshot }
-  | { type: 'pageViewed'; page: string };
+type CheckoutStarted = AnalyticsEvent<"checkoutStarted", { cartId: string }>;
+type PurchaseCompleted = AnalyticsEvent<
+  "purchaseCompleted",
+  { order: OrderSnapshot }
+>;
+type PageViewed = AnalyticsEvent<"pageViewed", { page: string }>;
+
+export type ApplicationEvent = CheckoutStarted | PurchaseCompleted | PageViewed;
 
 export const appEvents = createEventBus<ApplicationEvent>();
+```
+
+`src/core/analytics/index.ts`
+
+```ts
+export type { AnalyticsEvent } from "./event";
+export {
+  appEvents,
+  type ApplicationEvent,
+  type OrderItem,
+  type OrderSnapshot,
+} from "./events";
+export { ga4Service, klaviyoService } from "./providers";
 ```
 
 `purchaseCompleted` carries the order: by the time a handler runs, the cart has been cleared.
@@ -60,26 +80,25 @@ export const appEvents = createEventBus<ApplicationEvent>();
 `src/features/checkout/completePurchase.ts`
 
 ```ts
-import { appEvents } from '@core/events';
-import { orders } from './orders';
+import { appEvents } from "@core/analytics";
+import { orders } from "./orders";
 
 export async function completePurchase(cartId: string) {
   const order = await orders.place(cartId);
-  appEvents.emit({ type: 'purchaseCompleted', order });
+  appEvents.emit({ type: "purchaseCompleted", order });
   return order;
 }
 ```
 
 ## Provider features
 
-GA4 enriches `checkoutStarted` with the current cart from `core/cart`.
+Each feature handles every application event and ignores the ones it does not measure. GA4 enriches `checkoutStarted` with the current cart from `core/cart`. `cartState` stands for the cart's reactive state: an atom in Jotai or Effect, or a selector in Redux.
 
 `src/features/ga4-commerce/initGa4Commerce.ts`
 
 ```ts
-import { appEvents, type OrderItem } from '@core/events';
-import { readCart } from '@core/cart';
-import { sendToGa4 } from '@library/analytics';
+import { appEvents, ga4Service, type OrderItem } from "@core/analytics";
+import { cartState } from "@core/cart";
 
 function toGa4Item(item: OrderItem) {
   return {
@@ -91,18 +110,18 @@ function toGa4Item(item: OrderItem) {
 }
 
 export function initGa4Commerce() {
-  return appEvents.on(async (event) => {
+  return appEvents.on((event) => {
     switch (event.type) {
-      case 'checkoutStarted': {
-        const cart = await readCart(event.cartId);
-        return sendToGa4('begin_checkout', {
+      case "checkoutStarted": {
+        const cart = cartState.get();
+        return ga4Service.track("begin_checkout", {
           currency: cart.currency,
           value: cart.total,
           items: cart.items.map(toGa4Item),
         });
       }
-      case 'purchaseCompleted':
-        return sendToGa4('purchase', {
+      case "purchaseCompleted":
+        return ga4Service.track("purchase", {
           transaction_id: event.order.id,
           currency: event.order.currency,
           value: event.order.total,
@@ -113,22 +132,23 @@ export function initGa4Commerce() {
 }
 ```
 
-`src/features/second-provider-commerce/initSecondProviderCommerce.ts`
+`src/features/klaviyo-commerce/initKlaviyoCommerce.ts`
 
 ```ts
-import { appEvents } from '@core/events';
-import { sendToSecondProvider } from '@library/analytics';
+import { appEvents, klaviyoService } from "@core/analytics";
 
-export function initSecondProviderCommerce() {
+export function initKlaviyoCommerce() {
   return appEvents.on((event) => {
     switch (event.type) {
-      case 'checkoutStarted':
-        return sendToSecondProvider('checkout_started', { cart_id: event.cartId });
-      case 'purchaseCompleted':
-        return sendToSecondProvider('order_completed', {
-          order_id: event.order.id,
-          revenue: event.order.total,
-          currency: event.order.currency,
+      case "checkoutStarted":
+        return klaviyoService.track("Started Checkout", {
+          CartId: event.cartId,
+        });
+      case "purchaseCompleted":
+        return klaviyoService.track("Placed Order", {
+          OrderId: event.order.id,
+          $value: event.order.total,
+          Currency: event.order.currency,
         });
     }
   });
@@ -138,31 +158,65 @@ export function initSecondProviderCommerce() {
 `src/features/ga4-commerce/index.ts`
 
 ```ts
-export { initGa4Commerce as init } from './initGa4Commerce';
+export { initGa4Commerce as init } from "./initGa4Commerce";
 ```
 
-`src/features/second-provider-commerce/index.ts`
+`src/features/klaviyo-commerce/index.ts`
 
 ```ts
-export { initSecondProviderCommerce as init } from './initSecondProviderCommerce';
+export { initKlaviyoCommerce as init } from "./initKlaviyoCommerce";
 ```
-
-GA4 engagement, such as `pageViewed`, is a separate feature.
 
 ## Application bootstrap
 
 `src/app/bootstrap.ts`
 
 ```ts
-import * as Ga4Commerce from '@features/ga4-commerce';
-import * as SecondProviderCommerce from '@features/second-provider-commerce';
+import * as Ga4Commerce from "@features/ga4-commerce";
+import * as KlaviyoCommerce from "@features/klaviyo-commerce";
 
 export function bootstrap() {
-  const disposers = [Ga4Commerce.init(), SecondProviderCommerce.init()];
+  const disposers = [Ga4Commerce.init(), KlaviyoCommerce.init()];
   return () => disposers.forEach((dispose) => dispose());
 }
 ```
 
-`app/` also emits navigation measurements, such as `appEvents.emit({ type: 'pageViewed', page: 'catalog' })`, where its navigation decides a page has opened.
+## Page views
 
-Adding a third provider adds its feature, its transport in `library/analytics`, and one step here. Producers change only if the new provider's specification needs a checkpoint or data the application events do not carry.
+Only navigation knows when a page has opened, so `app/` emits page views. `usePathname` stands for the project's navigation API.
+
+`src/app/usePageViews.ts`
+
+```ts
+import { useEffect } from "react";
+import { appEvents } from "@core/analytics";
+import { usePathname } from "@library/navigation";
+
+export function usePageViews() {
+  const pathname = usePathname();
+
+  useEffect(
+    function emitPageViewed() {
+      appEvents.emit({ type: "pageViewed", page: pathname });
+    },
+    [pathname],
+  );
+}
+```
+
+`src/app/_layout.tsx`
+
+```tsx
+import { Outlet } from "@library/navigation";
+import { usePageViews } from "./usePageViews";
+
+export default function RootLayout() {
+  usePageViews();
+
+  return <Outlet />;
+}
+```
+
+## Analytics in areas
+
+For measurement that only an area's specifications define, the area's analytics subfeature can add its events to the application events and handle them on the same bus, or keep a bus of the area's own, as in [Local analytics](analytics-local.md).

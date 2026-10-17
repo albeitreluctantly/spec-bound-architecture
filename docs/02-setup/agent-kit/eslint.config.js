@@ -125,7 +125,36 @@ const aliasPatterns = {
     message:
       'Features reach their own files by relative path and never import other features',
   },
+  coreAlias: {
+    regex: '^@core(/|$)',
+    message: 'core/ reaches its own modules by relative path',
+  },
+  libraryAlias: {
+    regex: '^@library(/|$)',
+    message: 'library/ reaches its own modules by relative path',
+  },
 };
+
+// Code inside a home reaches its own files by relative path; aliases reach
+// other homes. A later `no-restricted-imports` entry replaces earlier options,
+// so each entry repeats every pattern that still applies.
+function restrictOwnHomeAlias(home, ownHomeAlias) {
+  return {
+    files: [`${SOURCE_ROOT}/${home}/**/*.{ts,tsx}`],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            aliasPatterns.relativeAcrossHomes,
+            aliasPatterns.deepAlias,
+            ownHomeAlias,
+          ],
+        },
+      ],
+    },
+  };
+}
 
 module.exports = defineConfig([
   {
@@ -146,21 +175,7 @@ module.exports = defineConfig([
       ],
     },
   },
-  {
-    // A later `no-restricted-imports` entry replaces earlier options, so it
-    // repeats every pattern that still applies.
-    files: [`${SOURCE_ROOT}/features/**/*.{ts,tsx}`],
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            aliasPatterns.relativeAcrossHomes,
-            aliasPatterns.deepAlias,
-            aliasPatterns.featureAlias,
-          ],
-        },
-      ],
-    },
-  },
+  restrictOwnHomeAlias('features', aliasPatterns.featureAlias),
+  restrictOwnHomeAlias('core', aliasPatterns.coreAlias),
+  restrictOwnHomeAlias('library', aliasPatterns.libraryAlias),
 ]);

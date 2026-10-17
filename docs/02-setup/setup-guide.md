@@ -46,6 +46,7 @@ The architecture rules state what holds in every codebase. The project conventio
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | Workflow and specification home       | Intent-first, spec-first, or code-as-spec; `specs/catalog/create-product.md` → `src/features/catalog/create-product/`        |
 | Stack                                 | UI, navigation, state, data access, dependency injection, testing                                                             |
+| Measurement                           | The analytics ladder rung: a service, area events, application events, or callbacks                                           |
 | Coding practices                      | An `onIntent` callback for intents; `Page` as a page entry's export; aliases for other code homes; how errors are represented |
 | Verification commands                 | Lint, typecheck, and test commands                                                                                            |
 | Architecture overrides                | Ask before adding a seam to another feature                                                                                   |
@@ -97,6 +98,7 @@ It allows and forbids these imports:
 | `shared/` → `core/` and `library/` entries                       | `shared/` → its own feature or subfeatures; any code → another feature's `shared/`     |
 | `core/` → `library/` and other `core/` entries                   | `core/` → features; `library/` → `core/` or features                                   |
 | `library/` → other `library/` entries                            | Any import of a module's internals from outside it                                     |
+| Any code → its own home by relative path                         | Any code → its own home through an alias (`@features/`, `@core/`, `@library/`)         |
 
 Three limits apply:
 

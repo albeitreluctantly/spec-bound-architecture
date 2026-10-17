@@ -43,7 +43,7 @@ export const { ExtensionsProvider, ExtensionSlot } =
 `src/core/product-grid/ProductGrid.tsx`
 
 ```tsx
-import type { Product } from '@core/products';
+import type { Product } from '../products';
 import { Grid } from '@library/ui';
 import { ExtensionsProvider, type ProductGridExtensions } from './anchors';
 import { ProductTile } from './ProductTile';
@@ -77,7 +77,7 @@ export function ProductGrid({
 `src/core/product-grid/ProductTile.tsx`
 
 ```tsx
-import type { Product } from '@core/products';
+import type { Product } from '../products';
 import { Card, Text } from '@library/ui';
 import { ExtensionSlot } from './anchors';
 

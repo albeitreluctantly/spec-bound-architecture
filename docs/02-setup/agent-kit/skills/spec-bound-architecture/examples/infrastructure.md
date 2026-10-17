@@ -38,7 +38,7 @@ An error carries what its message needs, not the message itself. One resolver tu
 `src/library/errors/index.ts`
 
 ```ts
-import { translate, type MessageKey, type MessageParams } from '@library/i18n';
+import { translate, type MessageKey, type MessageParams } from '../i18n';
 
 export class AppError extends Error {
   constructor(

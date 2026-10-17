@@ -25,7 +25,7 @@ Start `core/` with a flat structure and group it by domain area as needed.
 - A feature owns a bounded capability and its explicit contracts. It may serve a person or a downstream system, such as analytics.
 - Feature folders mirror the specification structure. A parent specification that groups separate subfeature specifications becomes a parent folder with matching subfeature folders. Keep a feature flat unless its specifications define subfeatures.
 - A parent's `shared/` holds code its subfeatures actually share. Code used by one subfeature stays inside it; a split alone does not create `shared/`.
-- A parent composes its subfeatures inside its own implementation only when the parent's specification defines their combined experience. Otherwise its public entry re-exports their entries for application wiring.
+- A parent composes its subfeatures inside its own implementation only when the parent's specification defines their combined experience, or to connect their outcome callbacks to its analytics subfeature. Otherwise its public entry re-exports their entries for application wiring.
 
 ## Placement
 
@@ -49,6 +49,7 @@ Promote a parent's shared code to `core/` when another top-level feature needs i
 - `library/` imports only other `library/` modules.
 - Nothing imports `app/`.
 - Code outside a module reaches it only through its public entry.
+- Code reaches another home through its alias, such as `@core/cart`, and its own home by relative path, such as `../cart`.
 - ESLint enforces these rules. Do not disable or weaken a rule to make an import pass: the error marks coupling the design must resolve, usually through one of the junctions below.
 
 ## Public boundary

@@ -1,41 +1,84 @@
 # Local analytics
 
-A fictional vehicle catalog has **Browse vehicles**, **Vehicle details**, **Saved vehicles**, and **Vehicle analytics** specifications under one parent. Measurement follows that area's specifications, so it is an area-local analytics subfeature with one provider. `createEventBus` and `sendToAmplitude` stand for the project's analytics infrastructure in `library/analytics`.
+Rung 2: a fictional vehicle catalog has **Browse vehicles**, **Vehicle bookmarks**, and **Vehicle analytics** specifications under one parent, so measurement is an analytics subfeature of that area with its own event bus. `createEventBus` stands for the project's generic bus helper in `library/`, and `@platform/amplitude` for the provider SDK.
 
 ## Measurement specification
 
-| Trigger | Application event | Provider event | Data |
-| --- | --- | --- | --- |
-| Vehicle details have loaded | `vehicleViewed` | `Vehicle Viewed` | Vehicle ID |
-| Saving a vehicle succeeds | `vehicleSaved` | `Vehicle Saved` | Vehicle ID |
+| Trigger                         | Provider event       | Data       |
+| ------------------------------- | -------------------- | ---------- |
+| Opening a vehicle from the list | `Vehicle Opened`     | Vehicle ID |
+| Bookmarking a vehicle succeeds  | `Vehicle Bookmarked` | Vehicle ID |
 
 ## Folders
 
 ```text
 src/
-  library/analytics/         event bus and provider transports
+  library/modules/
+    index.ts
+    event-bus/               generic event bus
+  core/analytics/            base event type and provider services
   features/vehicles/
     index.ts
     shared/
       index.ts
-      events.ts              vehicle event contracts and the area's bus
-    browse-vehicles/
-    vehicle-details/         emits vehicleViewed
-    saved-vehicles/          emits vehicleSaved
-    analytics/               provider mapping and handler registration
-  app/bootstrap.ts           runs the startup steps features export
+      events.ts              vehicle event types and the area's bus
+    browse-vehicles/         emits vehicleOpened
+    vehicle-bookmarks/       emits vehicleBookmarked
+    analytics/               provider mapping
+  app/bootstrap.ts
 ```
 
-## Contracts in the parent's shared code
+## Provider service in core
+
+`src/core/analytics/event.ts`
+
+```ts
+export type AnalyticsEvent<
+  Name extends string,
+  Payload extends Record<string, unknown> = Record<string, unknown>,
+> = { type: Name } & Payload;
+```
+
+`src/core/analytics/amplitudeService.ts`
+
+```ts
+import * as amplitude from "@platform/amplitude";
+import { readSession } from "../session";
+
+class AmplitudeService {
+  track(name: string, properties: Readonly<Record<string, unknown>>) {
+    return amplitude.track(name, {
+      ...properties,
+      user_id: readSession().userId,
+    });
+  }
+}
+
+export const amplitudeService = new AmplitudeService();
+```
+
+`src/core/analytics/index.ts`
+
+```ts
+export type { AnalyticsEvent } from "./event";
+export { amplitudeService } from "./amplitudeService";
+```
+
+## Events in the parent's shared code
 
 `src/features/vehicles/shared/events.ts`
 
 ```ts
-import { createEventBus } from '@library/analytics';
+import type { AnalyticsEvent } from "@core/analytics";
+import { createEventBus } from "@library/modules";
 
-export type VehicleEvent =
-  | { type: 'vehicleViewed'; vehicleId: string }
-  | { type: 'vehicleSaved'; vehicleId: string };
+type VehicleOpened = AnalyticsEvent<"vehicleOpened", { vehicleId: string }>;
+type VehicleBookmarked = AnalyticsEvent<
+  "vehicleBookmarked",
+  { vehicleId: string }
+>;
+
+export type VehicleEvent = VehicleOpened | VehicleBookmarked;
 
 export const vehicleEvents = createEventBus<VehicleEvent>();
 ```
@@ -43,69 +86,80 @@ export const vehicleEvents = createEventBus<VehicleEvent>();
 `src/features/vehicles/shared/index.ts`
 
 ```ts
-export { vehicleEvents, type VehicleEvent } from './events';
+export { vehicleEvents, type VehicleEvent } from "./events";
 ```
 
 ## Emission in product features
 
-`src/features/vehicles/saved-vehicles/saveVehicle.ts`
+`src/features/vehicles/browse-vehicles/BrowseVehicles.tsx`
 
-```ts
-import { vehicleEvents } from '../shared';
-import { savedVehicles } from './savedVehicles';
+```tsx
+import { Stack } from "@library/ui";
+import { vehicleEvents } from "../shared";
+import { VehicleCard } from "./VehicleCard";
+import { useVehicles } from "./useVehicles";
 
-export async function saveVehicle(vehicleId: string) {
-  await savedVehicles.add(vehicleId);
-  vehicleEvents.emit({ type: 'vehicleSaved', vehicleId });
+type BrowseVehiclesIntent = { type: "openVehicle"; vehicleId: string };
+
+type BrowseVehiclesProps = {
+  onIntent: (intent: BrowseVehiclesIntent) => void;
+};
+
+export function BrowseVehicles({ onIntent }: BrowseVehiclesProps) {
+  const vehicles = useVehicles();
+
+  return (
+    <Stack>
+      {vehicles.map((vehicle) => (
+        <VehicleCard
+          key={vehicle.id}
+          vehicle={vehicle}
+          onPress={() => {
+            vehicleEvents.emit({
+              type: "vehicleOpened",
+              vehicleId: vehicle.id,
+            });
+            onIntent({ type: "openVehicle", vehicleId: vehicle.id });
+          }}
+        />
+      ))}
+    </Stack>
+  );
 }
 ```
 
-`src/features/vehicles/vehicle-details/useVehicleViewedEvent.ts`
+`src/features/vehicles/vehicle-bookmarks/bookmarkVehicle.ts`
 
 ```ts
-import { useEffect } from 'react';
-import { vehicleEvents } from '../shared';
+import { vehicleEvents } from "../shared";
+import { bookmarkService } from "./bookmarkService";
 
-export function useVehicleViewedEvent(loadedVehicleId: string | undefined) {
-  useEffect(
-    function emitVehicleViewed() {
-      if (loadedVehicleId) {
-        vehicleEvents.emit({ type: 'vehicleViewed', vehicleId: loadedVehicleId });
-      }
-    },
-    [loadedVehicleId],
-  );
+export async function bookmarkVehicle(vehicleId: string) {
+  await bookmarkService.add(vehicleId);
+  vehicleEvents.emit({ type: "vehicleBookmarked", vehicleId });
 }
 ```
 
 ## Analytics subfeature
 
-`src/features/vehicles/analytics/toAmplitudeEvent.ts`
-
-```ts
-import type { VehicleEvent } from '../shared';
-
-export function toAmplitudeEvent(event: VehicleEvent) {
-  switch (event.type) {
-    case 'vehicleViewed':
-      return { name: 'Vehicle Viewed', properties: { vehicle_id: event.vehicleId } };
-    case 'vehicleSaved':
-      return { name: 'Vehicle Saved', properties: { vehicle_id: event.vehicleId } };
-  }
-}
-```
-
 `src/features/vehicles/analytics/initVehicleAnalytics.ts`
 
 ```ts
-import { sendToAmplitude } from '@library/analytics';
-import { vehicleEvents } from '../shared';
-import { toAmplitudeEvent } from './toAmplitudeEvent';
+import { amplitudeService } from "@core/analytics";
+import { vehicleEvents } from "../shared";
 
 export function initVehicleAnalytics() {
   return vehicleEvents.on((event) => {
-    const { name, properties } = toAmplitudeEvent(event);
-    return sendToAmplitude(name, properties);
+    switch (event.type) {
+      case "vehicleOpened":
+        return amplitudeService.track("Vehicle Opened", {
+          vehicle_id: event.vehicleId,
+        });
+      case "vehicleBookmarked":
+        return amplitudeService.track("Vehicle Bookmarked", {
+          vehicle_id: event.vehicleId,
+        });
+    }
   });
 }
 ```
@@ -113,16 +167,15 @@ export function initVehicleAnalytics() {
 `src/features/vehicles/analytics/index.ts`
 
 ```ts
-export { initVehicleAnalytics as init } from './initVehicleAnalytics';
+export { initVehicleAnalytics as init } from "./initVehicleAnalytics";
 ```
 
 `src/features/vehicles/index.ts`
 
 ```ts
-export * as Analytics from './analytics';
-export * as BrowseVehicles from './browse-vehicles';
-export * as SavedVehicles from './saved-vehicles';
-export * as VehicleDetails from './vehicle-details';
+export * as Analytics from "./analytics";
+export * as BrowseVehicles from "./browse-vehicles";
+export * as VehicleBookmarks from "./vehicle-bookmarks";
 ```
 
 ## Application bootstrap
@@ -130,7 +183,7 @@ export * as VehicleDetails from './vehicle-details';
 `src/app/bootstrap.ts`
 
 ```ts
-import { Analytics as VehicleAnalytics } from '@features/vehicles';
+import { Analytics as VehicleAnalytics } from "@features/vehicles";
 
 export function bootstrap() {
   const disposers = [VehicleAnalytics.init()];

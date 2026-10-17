@@ -51,6 +51,8 @@ TypeScript and React illustrate the mechanisms. Apply them through the host proj
 | | [Modification seams](examples/modification-seams.md) | Strategy, service binding, separately exposed logic and view |
 | | [Composition-root distribution](examples/composition-root-distribution.md) | Passing one feature's data into another on the same screen |
 | | [Mutual reference resolution](examples/mutual-reference-resolution.md) | Two-way coupling resolved by a specified combined experience |
-| Recipes | [Local analytics](examples/analytics-local.md) | Area measurement with one provider |
-| | [Application-wide analytics](examples/analytics-app-wide.md) | Application events with two providers and enrichment |
+| Analytics ladder | [Analytics service](examples/analytics-service.md) | Rung 1: one service in `core/` that features call |
+| | [Local analytics](examples/analytics-local.md) | Rung 2: an area's events, bus, and analytics subfeature |
+| | [Application-wide analytics](examples/analytics-app-wide.md) | Rung 3: application events in `core/`, two providers, enrichment |
+| | [Analytics callbacks](examples/analytics-callbacks.md) | Rung 4: outcome callbacks connected by the parent or `app/` |
 | Infrastructure | [Infrastructure](examples/infrastructure.md) | Localization, error messages, and logging imported directly |

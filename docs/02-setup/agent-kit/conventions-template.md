@@ -28,6 +28,10 @@
 | Dependency injection | <container, context, or none> |
 | Testing              | <unit and integration tools>  |
 
+## Measurement
+
+- **Rung:** <the analytics ladder rung in use: `service`, `area events`, `application events`, or `callbacks`; name more than one when areas differ>
+
 ## Verification
 
 - **Lint:** <command>
