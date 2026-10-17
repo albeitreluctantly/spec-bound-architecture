@@ -6,7 +6,7 @@ Analytics is a feature, usually headless: it owns what is measured, when an even
 
 Choose the scope from the specifications that define the measurement:
 
-- **Area-local:** one area's specifications define it. Contracts live in the parent's `shared/`, and the analytics subfeature exposes a start function through the parent's entry. See [Local analytics](../examples/analytics-local.md).
+- **Area-local:** one area's specifications define it. Contracts live in the parent's `shared/`, and the analytics subfeature exposes an init function through the parent's entry. See [Local analytics](../examples/analytics-local.md).
 - **Application-wide:** the measurement spans areas or providers. Contracts live in `core/`, and each provider or measurement responsibility can be its own top-level feature. See [Application-wide analytics](../examples/analytics-app-wide.md).
 
 ## Ownership
@@ -18,7 +18,7 @@ Choose the scope from the specifications that define the measurement:
 | Emitting an event at the action | The product feature that owns the action | Inside that feature |
 | Data a handler reads beyond the event | The owner of that state | The parent's `shared/` (Shared kernel) or `core/` (Core coordination) |
 | Event bus, queue, provider transports | Infrastructure | `library/` |
-| Starting and stopping handlers | Application composition | `app/` |
+| Initializing and disposing handlers | Application composition | `app/` |
 
 ## Rules
 
