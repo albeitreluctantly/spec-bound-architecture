@@ -12,14 +12,30 @@ const { defineConfig } = require('eslint/config');
 const SOURCE_ROOT = 'src';
 
 // The module, not the home, is the element: each `core/` and `library/`
-// module and each feature has its own public entry. The first matching pattern
-// classifies a file, so `shared` precedes `subfeature`. One subfeature level is
-// supported, and any folder directly inside a top-level feature counts as a
-// subfeature: leaf features keep their files flat.
+// module and each feature has its own public entry. A `core/` or `library/`
+// module is a folder with an `index` entry or a single file that is its own
+// entry. `mode: 'file'` is deprecated in eslint-plugin-boundaries 7 and logs a
+// warning, but it is the plugin's only way to classify a single file as an
+// element. The first matching pattern classifies a file, so `shared` precedes
+// `subfeature`. One subfeature level is supported, and any folder directly
+// inside a top-level feature counts as a subfeature: leaf features keep their
+// files flat.
 const elements = [
   { type: 'app', pattern: `${SOURCE_ROOT}/app` },
   { type: 'library', pattern: `${SOURCE_ROOT}/library/*`, capture: ['module'] },
+  {
+    type: 'library',
+    pattern: `${SOURCE_ROOT}/library/*.{ts,tsx}`,
+    mode: 'file',
+    capture: ['module'],
+  },
   { type: 'core', pattern: `${SOURCE_ROOT}/core/*`, capture: ['module'] },
+  {
+    type: 'core',
+    pattern: `${SOURCE_ROOT}/core/*.{ts,tsx}`,
+    mode: 'file',
+    capture: ['module'],
+  },
   {
     type: 'feature-shared',
     pattern: `${SOURCE_ROOT}/features/*/shared`,
@@ -95,6 +111,8 @@ const policies = [
       to: {
         element: {
           type: ['feature', 'subfeature', 'core', 'library'],
+          // A single-file module is its own entry.
+          path: '!**/*.{ts,tsx}',
           internalPath: `!${ENTRY_FILE_GLOB}`,
         },
       },
