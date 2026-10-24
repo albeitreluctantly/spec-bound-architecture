@@ -4,14 +4,14 @@
 
 Each feature, subfeature, and shared module has one public entry file. Everything it does not export is private: internal hooks, state, stores, services, contexts, child components, and helpers.
 
-| May export | Never export |
-| --- | --- |
-| A page or screen component | The internal logic hook or store |
-| A widget's components, or its provider with the contribution | Private child components |
-| Handlers or functions of a headless feature | Contexts and service implementations |
-| A curated slice of logic another part of the application needs | Helpers used only inside the feature |
-| A view component when a seam requires it | Types no consumer needs by name |
-| Types a consumer must name | |
+A feature exports only what its surroundings consume:
+
+- A page or screen component
+- A widget's components, or its provider with the contribution
+- Handlers or functions of a headless feature
+- A curated slice of logic another part of the application needs
+- A view component when a seam requires it
+- Types a consumer must name
 
 A parent's entry re-exports its subfeatures' entries, commonly as namespaces: `export * as CreateProduct from './create-product'`.
 
