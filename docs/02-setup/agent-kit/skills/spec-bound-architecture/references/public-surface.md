@@ -9,7 +9,7 @@ A feature exports only what its surroundings consume:
 - A page or screen component
 - A widget's components, or its provider with the contribution
 - Handlers or functions of a headless feature
-- A curated slice of logic another part of the application needs
+- A supported slice of logic that a seam or the composition consumes
 - A view component when a seam requires it
 - Types a consumer must name
 
@@ -38,4 +38,4 @@ An embedded feature's specification states where it appears. Its SPI states what
 
 ## Supported slices
 
-When logic must be reused outside the feature, expose only the supported part: a hook or function returning what consumers need, not the feature's whole internal state. Name it per the project conventions. A slice is a contract: keep it stable.
+When a seam or `app/`'s composition needs a feature's logic, such as the logic half of a logic and view split, expose only the supported part: a hook or function returning what the consumer needs, not the feature's whole internal state. Name it per the project conventions. A slice is a contract: keep it stable.
