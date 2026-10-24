@@ -138,6 +138,10 @@ const aliasPatterns = {
     regex: '^@(app|core|library|features)/[^/]+/.+',
     message: 'Import a public entry, not a path inside it',
   },
+  homeBarrel: {
+    regex: '^@(core|library|features)$',
+    message: 'Import a module entry such as @core/cart, not the home itself',
+  },
   featureAlias: {
     regex: '^@features/',
     message:
@@ -166,6 +170,7 @@ function restrictOwnHomeAlias(home, ownHomeAlias) {
           patterns: [
             aliasPatterns.relativeAcrossHomes,
             aliasPatterns.deepAlias,
+            aliasPatterns.homeBarrel,
             ownHomeAlias,
           ],
         },
@@ -188,7 +193,11 @@ module.exports = defineConfig([
       'no-restricted-imports': [
         'error',
         {
-          patterns: [aliasPatterns.relativeAcrossHomes, aliasPatterns.deepAlias],
+          patterns: [
+            aliasPatterns.relativeAcrossHomes,
+            aliasPatterns.deepAlias,
+            aliasPatterns.homeBarrel,
+          ],
         },
       ],
     },

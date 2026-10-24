@@ -42,14 +42,14 @@ Configure aliases for the homes in `tsconfig.json` and in the bundler:
 
 The architecture rules state what holds in every codebase. The project conventions supply what differs between codebases, and agents read them instead of assuming defaults:
 
-| Convention                            | Example                                                                                                                       |
-| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Workflow and specification home       | Intent-first, spec-first, or code-as-spec; `specs/catalog/create-product.md` → `src/features/catalog/create-product/`        |
-| Stack                                 | UI, navigation, state, data access, dependency injection, testing                                                             |
-| Measurement                           | The analytics ladder rung: a service, area events, application events, or callbacks                                           |
-| Coding practices                      | An `onIntent` callback for intents; `Page` as a page entry's export; aliases for other code homes; how errors are represented |
-| Verification commands                 | Lint, typecheck, and test commands                                                                                            |
-| Architecture overrides                | Ask before adding a seam to another feature                                                                                   |
+| Convention                      | Example                                                                                                                       |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Workflow and specification home | Intent-first, spec-first, or code-as-spec; `specs/catalog/create-product.md` → `src/features/catalog/create-product/`         |
+| Stack                           | UI, navigation, state, data access, dependency injection, testing                                                             |
+| Measurement                     | The analytics ladder rung: a service, area events, application events, or callbacks                                           |
+| Coding practices                | An `onIntent` callback for intents; `Page` as a page entry's export; aliases for other code homes; how errors are represented |
+| Verification commands           | Lint, typecheck, and test commands                                                                                            |
+| Architecture overrides          | Ask before adding a seam to another feature                                                                                   |
 
 Record them in either of two ways:
 
@@ -89,16 +89,17 @@ The configuration classifies every file into an element and applies dependency p
 
 It allows and forbids these imports:
 
-| Allowed                                                          | Forbidden                                                                              |
-| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `app/` → feature, `core/`, and `library/` entries                | `app/` → subfeature entries, any `shared/`, or private files                           |
-| Feature → `core/` and `library/` entries; own files              | Feature → sibling feature, through its entry or a deep path                            |
-| Parent → its subfeatures' entries and its own `shared/`          | Feature, `core/`, or `library/` → `app/`                                               |
-| Subfeature → parent's `shared/`, `core/`, and `library/` entries | Subfeature → sibling subfeature, another feature, or the parent's entry or composition |
-| `shared/` → `core/` and `library/` entries                       | `shared/` → its own feature or subfeatures; any code → another feature's `shared/`     |
-| `core/` → `library/` and other `core/` entries                   | `core/` → features; `library/` → `core/` or features                                   |
-| `library/` → other `library/` entries                            | Any import of a module's internals from outside it                                     |
-| Any code → its own home by relative path                         | Any code → its own home through an alias (`@features/`, `@core/`, `@library/`)         |
+| Allowed                                                           | Forbidden                                                                              |
+| ----------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `app/` → feature, `core/`, and `library/` entries                 | `app/` → subfeature entries, any `shared/`, or private files                           |
+| Feature → `core/` and `library/` entries; own files               | Feature → sibling feature, through its entry or a deep path                            |
+| Parent → its subfeatures' entries and its own `shared/`           | Feature, `core/`, or `library/` → `app/`                                               |
+| Subfeature → parent's `shared/`, `core/`, and `library/` entries  | Subfeature → sibling subfeature, another feature, or the parent's entry or composition |
+| `shared/` → `core/` and `library/` entries                        | `shared/` → its own feature or subfeatures; any code → another feature's `shared/`     |
+| `core/` → `library/` and other `core/` entries                    | `core/` → features; `library/` → `core/` or features                                   |
+| `library/` → other `library/` entries                             | Any import of a module's internals from outside it                                     |
+| Any code → its own home by relative path                          | Any code → its own home through an alias (`@features/`, `@core/`, `@library/`)         |
+| Any code → another home's module through its alias (`@core/cart`) | Any code → a home itself (`@core`, `@library`, `@features`)                            |
 
 Three limits apply:
 

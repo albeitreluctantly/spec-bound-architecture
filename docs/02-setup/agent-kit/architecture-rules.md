@@ -49,7 +49,7 @@ Promote a parent's shared code to `core/` when another top-level feature needs i
 - `library/` imports only other `library/` modules.
 - Nothing imports `app/`.
 - Code outside a module reaches it only through its public entry.
-- Code reaches another home through its alias, such as `@core/cart`, and its own home by relative path, such as `../cart`.
+- Code reaches another home's module through the home's alias, such as `@core/cart` (a folder with an `index` entry) or `@core/pricingService` (a single file), never the home itself (`@core`), and its own home by relative path, such as `../cart`.
 - ESLint enforces these rules. Do not disable or weaken a rule to make an import pass: the error marks coupling the design must resolve, usually through one of the junctions below.
 
 ## Public boundary
