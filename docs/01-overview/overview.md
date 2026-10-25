@@ -12,11 +12,11 @@ Spec-bound Architecture proposes holistic, bounded features, each described by i
 
 This approach relies on product and development teams sharing responsibility for clear, implementable specifications. Which is particularly suited to automated software factories, where specification-authoring agents translate product owners' intent into requirements and implementation agents turn those requirements into code. The positive “anti-fragile” feedback loop refines both: implementation experience informs specification boundaries, and those boundaries guide implementation. The aim is to produce isolated features while limiting unintended changes elsewhere in the codebase.
 
-The application becomes a collection of features assembled at the application composition root, supported by shared backbone code called **substrate**.
+The application becomes a collection of features assembled at the application composition root and set within the **substrate**: the ambient background they live in, made of shared foundation and infrastructure.
 
 ## High-level structure
 
-The architecture separates foure responsibilities: features, shared foundation, infrastructure, and application composition. Four top-level folders give them distinct code homes, each organized to suit its role.
+The architecture separates four responsibilities: features, shared foundation, infrastructure, and application composition. Four top-level folders give them distinct code homes, each organized to suit its role.
 
 ### `app/` — application composition
 
